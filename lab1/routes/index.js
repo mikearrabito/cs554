@@ -1,7 +1,7 @@
+const blogRoutes = require("./blog");
+
 const constructorMethod = (app) => {
-  app.get("/", (req, res) => {
-    res.json({ test: "test" });
-  });
+  app.use("/blog", blogRoutes);
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Not found" });
