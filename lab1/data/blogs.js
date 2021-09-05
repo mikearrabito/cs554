@@ -27,10 +27,10 @@ const getBlogById = async (id) => {
   }
 
   const blogs = await blogsCollection();
-  const blogFound = await blogs.find({ _id: ObjectId(id) });
+  const blogFound = await blogs.findOne({ _id: ObjectId(id) });
 
   if (blogFound == null) {
-    throw new Error("Not found");
+    return null;
   }
 
   blogFound._id = blogFound._id.toString();
@@ -40,6 +40,7 @@ const getBlogById = async (id) => {
     comment.userThatPostedComment._id =
       comment.userThatPostedComment._id.toString();
   }
+
   return blogFound;
 };
 
@@ -59,19 +60,21 @@ const createBlog = async (username, title, body) => {
     throw new Error("Title and body must not be empty");
   }
 
-  const userThatPosted = getUser(username);
+  const userThatPosted = await getUser(username);
   userThatPosted._id = ObjectId(userThatPosted._id);
   delete userThatPosted.name;
+  delete userThatPosted.password;
 
   const newBlog = {
     _id: new ObjectId(),
     title,
+    body,
     userThatPosted,
     comments: [],
   };
 
   const blogs = await blogsCollection();
-  const insertInfo = blogs.insertOne(newBlog);
+  const insertInfo = await blogs.insertOne(newBlog);
 
   if (insertInfo.insertedCount === 0) {
     throw new Error("Could not create blog");
