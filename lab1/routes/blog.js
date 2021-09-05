@@ -242,13 +242,13 @@ router.patch("/:id", async (req, res) => {
   if (title && typeof title !== "string") {
     return res.status(400).json({ error: "Title must be a string" });
   }
-  if (body && body !== "string") {
+  if (body && typeof body !== "string") {
     return res.status(400).json({ error: "Body must be a string" });
   }
-  if (title && title.trim() === "") {
+  if (title != null && title.trim() === "") {
     return res.status(400).json({ error: "Title must not be only whitespace" });
   }
-  if (body && body.trim() === "") {
+  if (body != null && body.trim() === "") {
     return res.status(400).json({ error: "Body must not be only whitespace" });
   }
 
