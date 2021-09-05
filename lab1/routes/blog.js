@@ -98,21 +98,24 @@ router.get("/logout", (req, res) => {
 router.get("/", async (req, res) => {
   if (req.query?.skip && !/^\d+$/.test(req.query.skip)) {
     // regex checks for any non digit characters
-    res.status(400).json({ error: "Skip must be a number" });
+    return res.status(400).json({ error: "Skip must be a positive number" });
   }
   if (req.query?.take && !/^\d+$/.test(req.query.take)) {
-    res.status(400).json({ error: "Take must be a number" });
+    return res.status(400).json({ error: "Take must be a positive number" });
   }
 
   const skip = req.query?.skip ? parseInt(req.query.skip) : 0; // where to start from in our array of blogs, defaults to 0 if not supplied
+  if (req.query?.skip && (isNaN(skip) || skip < 1)) {
+    return res.status(400).json({ error: "Skip must be a positive number" });
+  }
+
   let take = req.query?.take
     ? parseInt(req.query.take)
     : DEFAULT_NUM_BLOGS_TO_SHOW; // number of blogs to show (0-100), defaults to 20 if not supplied
 
-  if (isNaN(skip) || isNaN(take)) {
-    // parseInt will set skip or take to NaN if given null, undefined, or a string thats not a valid int, shouldn't hit this because of the regex check,
-    // but just an added check in case of a missed edge case
-    return res.status(400).json({ error: "Invalid parameters" });
+  if (isNaN(take) || take < 1) {
+    // skip and take must be positive numbers
+    return res.status(400).json({ error: "Take must be a positive number" });
   }
 
   if (take > MAX_ALLOWED_BLOGS_TO_SHOW) {
