@@ -1,6 +1,8 @@
 const mongoCollections = require("../config/mongoCollections");
 const ObjectId = require("mongodb").ObjectId;
 const usersCollection = mongoCollections.users;
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const createUser = async (name, username, password) => {
   if (name == null || username == null || password == null) {
@@ -14,24 +16,25 @@ const createUser = async (name, username, password) => {
     throw new TypeError("Unexpected type for a parameter found");
   }
   if (name.trim() === "" || username.trim() === "" || password.trim() === "") {
-    throw new Error("Name, username, and password must not be empty");
+    throw new Error("Name, username, and password must not be whitespace only");
   }
+
+  password = await bcrypt.hash(password, saltRounds);
 
   const newUser = {
     _id: new ObjectId(),
-    name,
-    username: username.toLowerCase(),
+    name: name.trim(),
+    username: username.trim().toLowerCase(),
     password,
   };
 
   const users = await usersCollection();
-  const insertInfo = users.insertOne(newUser);
+  const insertInfo = await users.insertOne(newUser);
 
   if (insertInfo.insertedCount === 0) {
     throw new Error("Could not create user");
   }
 
-  delete newUser.password;
   newUser._id = newUser._id.toString();
   return newUser;
 };
@@ -48,15 +51,26 @@ const getUser = async (username) => {
   }
 
   const users = await usersCollection();
-  const userFound = users.find({ username: username.toLowerCase() });
+  const userFound = await users.findOne({ username: username.toLowerCase() });
 
   if (userFound == null) {
-    throw new Error("Not found");
+    return null;
   }
 
-  delete userFound.password;
   userFound._id = userFound._id.toString();
   return userFound;
 };
 
-module.exports = { createUser, getUser };
+const userNameExists = async (username) => {
+  const users = await usersCollection();
+  const user = await users.findOne({
+    username: username.trim().toLowerCase(),
+  });
+  return user != null;
+};
+
+module.exports = {
+  createUser,
+  getUser,
+  userNameExists,
+};

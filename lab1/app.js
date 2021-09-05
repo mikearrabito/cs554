@@ -15,6 +15,7 @@ app.use(
     secret: "some secret string",
     resave: false,
     saveUninitialized: true,
+    cookie: { maxAge: 60000 },
   })
 );
 
@@ -34,26 +35,26 @@ You will apply a middleware that will be applied to the POST and DELETE routes f
 app.use("/blog", async (req, res, next) => {
   if (req.method == "POST" || req.method == "PUT" || req.method == "PATCH") {
     if (req.session?.AuthCookie?.user == null) {
-      res.status(401).json({ error: "Not authenticated" });
+      return res.status(401).json({ error: "Not authenticated" });
     }
   }
   if (req.method == "PUT" || req.method == "PATCH") {
     const blogId = req.params.id;
     if (blogId == null) {
-      res.status(400);
+      return res.status(400);
     }
     let blog;
     try {
       blog = await blogs.getBlogById(blogId);
     } catch (e) {
       if (e.message === "Not found") {
-        res.status(404).json({ error: "Blog not found" });
+        return res.status(404).json({ error: "Blog not found" });
       } else {
-        res.status(500).json({ error: "Server error retrieving blog" });
+        return res.status(500).json({ error: "Server error retrieving blog" });
       }
     }
     if (blog.userThatPosted?._id !== req.session.AuthCookie.user.userid) {
-      res.status(403).json({ error: "Unauthorized" });
+      return res.status(403).json({ error: "Unauthorized" });
     }
   }
   next();
@@ -62,7 +63,7 @@ app.use("/blog", async (req, res, next) => {
 app.use("/blog/:id/comments", (req, res, next) => {
   if (req.method === "POST") {
     if (req.session?.AuthCookie?.user == null) {
-      res.status(401).json({ error: "Unauthenticated" });
+      return res.status(401).json({ error: "Unauthenticated" });
     }
   }
   next();
@@ -71,10 +72,10 @@ app.use("/blog/:id/comments", (req, res, next) => {
 app.use("/blog/:blogId/:commentId ", async (req, res, next) => {
   if (req.method === "DELETE") {
     if (req.session?.AuthCookie?.user == null) {
-      res.status(401).json({ error: "Unauthenticated" });
+      return res.status(401).json({ error: "Unauthenticated" });
     }
     if (req.params.blogId == null || req.params.commentId == null) {
-      res.status(400);
+      return res.status(400);
     }
     let commentFound = null;
     const blog = await blogs.getBlogById(req.params.blogId);
@@ -85,12 +86,12 @@ app.use("/blog/:blogId/:commentId ", async (req, res, next) => {
       }
     }
     if (commentFound == null) {
-      res.status(404).json({ error: "Comment not found" });
+      return res.status(404).json({ error: "Comment not found" });
     }
     if (
       comment.userThatPostedComment?._id !== req.session.AuthCookie.user.userid
     ) {
-      res.status(403).json({ error: "Unauthorized" });
+      return res.status(403).json({ error: "Unauthorized" });
     }
   }
   next();
