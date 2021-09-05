@@ -175,23 +175,133 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {
-  // TODO finish
-  res.json({ test: "test" });
+router.put("/:id", async (req, res) => {
+  const id = req.params?.id;
+  const { title, body } = req.body;
+
+  if (!req.session?.AuthCookie?.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+  if (id == null || typeof id !== "string" || id.trim() === "") {
+    return res.status(400).json({ message: "Bad request" });
+  }
+  if (title == null || body == null) {
+    return res
+      .status(400)
+      .json({ error: "Title and body both required for PUT" });
+  }
+  if (typeof title !== "string" || typeof body !== "string") {
+    return res.status(400).json({ error: "Title and body must be strings" });
+  }
+  if (title.trim() === "" || body.trim() === "") {
+    return res
+      .status(400)
+      .json({ error: "Title and body must not be whitespace only" });
+  }
+
+  try {
+    const currentUserId = req.session.AuthCookie.user._id;
+    const blogToUpdate = await blogs.getBlogById(id);
+
+    if (blogToUpdate == null) {
+      return res.status(404).json({ error: "Blog to update not found" });
+    }
+    if (blogToUpdate.userThatPosted._id !== currentUserId) {
+      return res
+        .status(403)
+        .json({ error: "Can only modify blog posted by yourself" });
+    }
+
+    const updatedBlog = await blogs.updateBlog(id, title, body);
+    if (updatedBlog == null) {
+      // blog found, blog was made by this user, correct values given, but update values were same as old values
+      return res.status(304).json();
+    }
+    return res.status(200).json(updatedBlog);
+  } catch (e) {
+    console.error(e.message);
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
-router.patch("/:id", (req, res) => {
-  // TODO finish
-  res.json({ test: "test" });
+router.patch("/:id", async (req, res) => {
+  const id = req.params?.id;
+  const { title, body } = req.body;
+
+  if (id == null || typeof id !== "string" || id.trim() === "") {
+    return res.status(400).json({ message: "Bad request" });
+  }
+  if (!req.session?.AuthCookie?.user) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
+  if (title == null && body == null) {
+    return res
+      .status(400)
+      .json({ error: "Must provide either new title or new body" });
+  }
+  if (title && typeof title !== "string") {
+    return res.status(400).json({ error: "Title must be a string" });
+  }
+  if (body && body !== "string") {
+    return res.status(400).json({ error: "Body must be a string" });
+  }
+  if (title && title.trim() === "") {
+    return res.status(400).json({ error: "Title must not be only whitespace" });
+  }
+  if (body && body.trim() === "") {
+    return res.status(400).json({ error: "Body must not be only whitespace" });
+  }
+
+  try {
+    const currentUserId = req.session.AuthCookie.user._id;
+    const blogToUpdate = await blogs.getBlogById(id);
+
+    if (blogToUpdate == null) {
+      return res.status(404).json({ error: "Blog to update not found" });
+    }
+    if (blogToUpdate.userThatPosted._id !== currentUserId) {
+      return res
+        .status(403)
+        .json({ error: "Can only modify blog posted by yourself" });
+    }
+
+    const updatedBlog = await blogs.updateBlog(id, title, body);
+    if (updatedBlog == null) {
+      // blog found, blog was made by this user, correct values given, but update values were same as old values
+      return res.status(304).json();
+    }
+    return res.status(200).json(updatedBlog);
+  } catch (e) {
+    console.error(e.message);
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
+// TODO: Finish
 router.post("/:id/comments", (req, res) => {
-  // TODO finish
+  const id = req.params?.id;
+  if (id == null || typeof id !== "string" || id.trim() === "") {
+    return res.status(400).json({ message: "Bad request" });
+  }
+
   res.json({ test: "test" });
 });
 
+// TODO: Finish
 router.delete("/:blogId/:commentId", (req, res) => {
-  // TODO finish
+  const blogId = req.params?.blogId;
+  const commentId = req.params?.commentId;
+  if (blogId == null || typeof blogId !== "string" || blogId.trim() === "") {
+    return res.status(400).json({ message: "Bad request" });
+  }
+  if (
+    commentId == null ||
+    typeof commentId !== "string" ||
+    commentId.trim() === ""
+  ) {
+    return res.status(400).json({ message: "Bad request" });
+  }
+
   res.json({ test: "test" });
 });
 
