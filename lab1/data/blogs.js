@@ -66,6 +66,9 @@ const createBlog = async (username, title, body) => {
   delete userThatPosted.name;
   delete userThatPosted.password;
 
+  title = title.trim();
+  body = body.trim();
+
   const newBlog = {
     _id: new ObjectId(),
     title,
@@ -113,8 +116,8 @@ const updateBlog = async (id, title, body) => {
 
   const updatedBlog = {
     ...currentBlog,
-    title: title == null ? currentBlog.title : title,
-    body: body == null ? currentBlog.body : body,
+    title: title == null ? currentBlog.title : title.trim(),
+    body: body == null ? currentBlog.body : body.trim(),
   };
   delete updatedBlog._id; // cannot be present or mongodb throws an error for immutable field inside our update object
 
@@ -135,4 +138,68 @@ const updateBlog = async (id, title, body) => {
   return await getBlogById(id);
 };
 
-module.exports = { getAllBlogs, getBlogById, createBlog, updateBlog };
+const createComment = async (blogId, username, comment) => {
+  if (blogId == null || username == null || comment == null) {
+    throw new Error("Missing parameter(s)");
+  }
+  if (
+    typeof blogId !== "string" ||
+    typeof username !== "string" ||
+    typeof comment !== "string"
+  ) {
+    throw new TypeError("blogId, username, comment must be strings");
+  }
+  if (blogId.trim() === "" || username.trim() === "" || comment.trim() === "") {
+    throw new Error("Missing parameter(s)");
+  }
+
+  const userThatPostedComment = await getUser(username);
+  userThatPostedComment._id = ObjectId(userThatPostedComment._id);
+  delete userThatPostedComment.name;
+  delete userThatPostedComment.password;
+
+  const newComment = {
+    _id: new ObjectId(),
+    userThatPostedComment,
+    comment: comment.trim(),
+  };
+
+  const blogs = await blogsCollection();
+
+  const updateInfo = await blogs.updateOne(
+    { _id: ObjectId(blogId) },
+    { $push: { comments: newComment } }
+  );
+
+  return await getBlogById(blogId);
+};
+
+const deleteComment = async (blogId, commentId) => {
+  if (blogId == null || commentId == null) {
+    throw new Error("Missing parameter(s)");
+  }
+  if (typeof blogId !== "string" || typeof commentId !== "string") {
+    throw new TypeError("blogId and commentId must be strings");
+  }
+  if (blogId.trim() === "" || commentId.trim() === "") {
+    throw new Error("Missing parameter(s)");
+  }
+
+  const blogs = await blogsCollection();
+
+  const updateInfo = await blogs.updateOne(
+    { _id: ObjectId(blogId) },
+    { $pull: { comments: { _id: ObjectId(commentId) } } }
+  );
+
+  return await getBlogById(blogId);
+};
+
+module.exports = {
+  getAllBlogs,
+  getBlogById,
+  createBlog,
+  updateBlog,
+  createComment,
+  deleteComment,
+};

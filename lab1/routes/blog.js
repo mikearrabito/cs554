@@ -9,9 +9,8 @@ const DEFAULT_NUM_BLOGS_TO_SHOW = 20;
 const MAX_ALLOWED_BLOGS_TO_SHOW = 100;
 
 router.post("/signup", async (req, res) => {
-  const name = req.body?.name;
-  const username = req.body?.username;
-  const password = req.body?.password;
+  const { name, username, password } = req.body;
+
   if (name == null || username == null || password == null) {
     return res.status(400).json({ error: "Missing parameters to create user" });
   }
@@ -34,6 +33,7 @@ router.post("/signup", async (req, res) => {
       .status(409)
       .json({ error: "Account with this username already exists" });
   }
+
   try {
     const createdUser = await users.createUser(name, username, password);
     delete createdUser.password;
@@ -45,8 +45,8 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const username = req.body?.username;
-  const password = req.body?.password;
+  const { username, password } = req.body;
+
   if (username == null || password == null) {
     return res.status(400).json({ error: "Missing parameters to login" });
   }
@@ -60,6 +60,7 @@ router.post("/login", async (req, res) => {
       error: "Username, and password cannot be whitespace only",
     });
   }
+
   try {
     const user = await users.getUser(username);
     if (user == null) {
@@ -176,7 +177,7 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
-  const id = req.params?.id;
+  const { id } = req.params;
   const { title, body } = req.body;
 
   if (!req.session?.AuthCookie?.user) {
@@ -225,7 +226,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.patch("/:id", async (req, res) => {
-  const id = req.params?.id;
+  const { id } = req.params;
   const { title, body } = req.body;
 
   if (id == null || typeof id !== "string" || id.trim() === "") {
@@ -277,20 +278,59 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-// TODO: Finish
-router.post("/:id/comments", (req, res) => {
-  const id = req.params?.id;
+router.post("/:id/comments", async (req, res) => {
+  const { id } = req.params;
+  const { comment } = req.body;
+
+  if (!req.session?.AuthCookie?.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  if (comment == null) {
+    return res
+      .status(400)
+      .json({ error: "Provide a comment in the request body" });
+  }
+  if (typeof comment !== "string") {
+    return res.status(400).json({ error: "Comment must be a string" });
+  }
+  if (comment.trim() === "") {
+    return res
+      .status(400)
+      .json({ error: "Comment can not only be whitespace" });
+  }
   if (id == null || typeof id !== "string" || id.trim() === "") {
     return res.status(400).json({ message: "Bad request" });
   }
 
-  res.json({ test: "test" });
+  try {
+    const blog = await blogs.getBlogById(id);
+
+    if (blog == null) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+    if (blog.userThatPosted._id !== req.session.AuthCookie.user._id) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    const updatedBlog = await blogs.createComment(
+      id,
+      req.session.AuthCookie.user.username,
+      comment
+    );
+
+    return res.status(200).json(updatedBlog);
+  } catch (e) {
+    console.error(e.message);
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
-// TODO: Finish
-router.delete("/:blogId/:commentId", (req, res) => {
-  const blogId = req.params?.blogId;
-  const commentId = req.params?.commentId;
+router.delete("/:blogId/:commentId", async (req, res) => {
+  const { blogId, commentId } = req.params;
+
+  if (!req.session?.AuthCookie?.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
   if (blogId == null || typeof blogId !== "string" || blogId.trim() === "") {
     return res.status(400).json({ message: "Bad request" });
   }
@@ -302,7 +342,38 @@ router.delete("/:blogId/:commentId", (req, res) => {
     return res.status(400).json({ message: "Bad request" });
   }
 
-  res.json({ test: "test" });
+  try {
+    const blog = await blogs.getBlogById(blogId);
+
+    if (blog == null) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    let foundComment = false;
+
+    for (comment of blog.comments) {
+      if (comment._id === commentId) {
+        foundComment = true;
+        if (
+          req.session.AuthCookie.user._id !== comment.userThatPostedComment._id
+        ) {
+          return res.status(403).json({ error: "Unauthorized" });
+        }
+        break;
+      }
+    }
+
+    if (!foundComment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const updatedBlog = await blogs.deleteComment(blogId, commentId);
+
+    return res.status(200).json(updatedBlog);
+  } catch (e) {
+    console.error(e.message);
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
 module.exports = router;
