@@ -88,12 +88,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  if (req.session?.AuthCookie?.user != null) {
-    req.session.destroy();
-    return res.status(200).json({ message: "Successfully logged out" });
-  } else {
-    return res.status(304).json(); // not logged in, nothing to do
-  }
+  req.session.destroy();
+  return res.status(200).json({ message: "Successfully logged out" });
 });
 
 router.get("/", async (req, res) => {
@@ -213,10 +209,10 @@ router.put("/:id", async (req, res) => {
         .json({ error: "Can only modify blog posted by yourself" });
     }
 
-    const updatedBlog = await blogs.updateBlog(id, title, body);
+    let updatedBlog = await blogs.updateBlog(id, title, body);
     if (updatedBlog == null) {
-      // blog found, blog was made by this user, correct values given, but update values were same as old values
-      return res.status(304).json();
+      // no values updated, just return original blog found
+      updatedBlog = blogToUpdate;
     }
     return res.status(200).json(updatedBlog);
   } catch (e) {
@@ -269,7 +265,7 @@ router.patch("/:id", async (req, res) => {
     const updatedBlog = await blogs.updateBlog(id, title, body);
     if (updatedBlog == null) {
       // blog found, blog was made by this user, correct values given, but update values were same as old values
-      return res.status(304).json();
+      return res.status(400).json({ error: "No values to update" });
     }
     return res.status(200).json(updatedBlog);
   } catch (e) {
