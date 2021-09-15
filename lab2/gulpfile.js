@@ -7,14 +7,14 @@ const rename = require("gulp-rename");
 const minify = require("gulp-minify");
 
 const sassFiles = [
-  "./styles/custom.scss",
-  "./styles/bootstrap/scss/_variables.scss",
+  "./src/styles/custom.scss",
+  "./src/styles/bootstrap/scss/_variables.scss",
 ];
 
 const vendorJsFiles = [
   "./node_modules/jquery/dist/jquery.js",
   "./node_modules/popper.js/dist/umd/popper.min.js",
-  "./styles/bootstrap/dist/js/bootstrap.js",
+  "./src/styles/bootstrap/dist/js/bootstrap.js",
 ];
 
 gulp.task("sass", function (done) {
