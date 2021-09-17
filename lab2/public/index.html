@@ -35,13 +35,13 @@
                         <a class="nav-item" href="#karin">Citroën Karin</a>
                     </li>
                     <li>
-                        <a class="nav-item" href="#item-8">item 8</a>
+                        <a class="nav-item" href="#x90">Suzuki X-90</a>
                     </li>
                     <li>
-                        <a class="nav-item" href="#item-9">item 9</a>
+                        <a class="nav-item" href="#isetta">BMW Isetta</a>
                     </li>
                     <li>
-                        <a class="nav-item" href="#item-10">item 10</a>
+                        <a class="nav-item" href="#cyclone">Cadillac Cyclone</a>
                     </li>
                 </ul>
             </nav>
@@ -149,43 +149,43 @@
                     </div>
 
                     <div class="col">
-                        <div class="card" style="width: 18rem;" id="item-8">
-                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                        <div class="card" style="width: 18rem;" id="x90">
+                            <img class="card-img-top" src="images/x90.jpeg" alt="Suzuki X-90 Image">
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the
-                                    bulk
-                                    of
-                                    the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <h5 class="card-title">Suzuki X-90</h5>
+                                <p class="card-text">Subcompact car made by Suzuki from 1995-1997</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#x90-modal">
+                                    More info
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="col">
-                        <div class="card" style="width: 18rem;" id="item-9">
-                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                        <div class="card" style="width: 18rem;" id="isetta">
+                            <img class="card-img-top" src="images/isetta.jpeg" alt="BMW Isetta image">
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the
-                                    bulk
-                                    of
-                                    the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <h5 class="card-title">BMW Isetta</h5>
+                                <p class="card-text">The top selling single cylinder engine car made in the 1950s</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#isetta-modal">
+                                    More info
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div class="col">
-                        <div class="card" style="width: 18rem;" id="item-10">
-                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                        <div class="card" style="width: 18rem;" id="cyclone">
+                            <img class="card-img-top" src="images/cyclone.jpeg" alt="Cadillac Cyclone image">
                             <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
-                                <p class="card-text">Some quick example text to build on the card title and make up the
-                                    bulk
-                                    of
-                                    the card's content.</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <h5 class="card-title">Cadillac Cyclone</h5>
+                                <p class="card-text">1959 Futuristic concept car by Cadillac</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#cyclone-modal">
+                                    More info
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -358,7 +358,73 @@
         </div>
     </div>
 
+    <div class="modal fade" id="x90-modal" tabindex="-1" role="dialog" aria-labelledby="x90-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="x90-modal-label">Suzuki X-90</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This ultra compact car by Suzuki was only produced from 1995-1997. It featured a 4 cylinder engine
+                    making 95 hp. There was a five speed manual or 4 speed automatic transmission as options.
+                    Only 7,205 X-90s were imported to the United States.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade" id="isetta-modal" tabindex="-1" role="dialog" aria-labelledby="isetta-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="isetta-modal-label">BMW Isetta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    An Italian designed microcar that was the world's first production car to reach 3L/100km fuel
+                    consumption (78 mpg). It was the top selling single cylinder car in the world with 161,728 cars
+                    sold. The car was initially created by Italian company Iso, and later built under license by others.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cyclone-modal" tabindex="-1" role="dialog" aria-labelledby="cyclone-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cyclone-modal-label">Cadillac Cyclone</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    A concept car created by Cadillac which featured a 390 cu in V8 engine, rear-mounted transaxle, and
+                    all-wheel independent suspension. A unique feature of this car was the car's exhaust pipes were just
+                    ahead of the front wheels. The two pointed cones at the front of the car were not just design
+                    features, they were actually radar sensors that were part of a collision avoidance system. Such a
+                    system was still in its very early stages of development.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/vendor-min.js"></script>
 </body>
