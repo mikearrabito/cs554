@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("*", (req, res) => {
-  return res.status(404).json({ error: "404" });
+  return res.status(404).json({ error: "Page not found" });
 });
 
 app.listen(PORT, () => {

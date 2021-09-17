@@ -1,1 +1,34 @@
 @import "./bootstrap/scss/bootstrap";
+@import "./variables.scss";
+
+.navbar {
+  align-items: baseline;
+}
+
+// <992px = 1 item, 992-1200 = 2 items, >1200 = 3 items per row
+@media (max-width: 992px) {
+  #linebreak-for-nav {
+    width: 100%;
+    display: flex;
+  }
+}
+@media (min-width: 993px) {
+  #linebreak-for-nav {
+    // hidden div that only shows when we are on small screen size
+    // just a 100% width div that forces div containing items to wrap underneath so nav is on top
+    display: none;
+  }
+}
+
+@media (max-width: 992px) and (min-width: 992px) {
+  // fix for bug when view is exactly 992px wide
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px; // default is 1140, just slightly too small to fit the 3 images
+  }
+}

@@ -1,153 +1,364 @@
 <!DOCTYPE html>
+<html>
 
 <head>
-    <title>CS 554 Lab 2 - Michael Arrabito</title>
+    <title>Unique Vehicles</title>
     <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="icon" type="image/png" href="favicon.svg">
     <meta charset="utf-8">
 </head>
 
 <body>
-    <nav>
-
-    </nav>
     <div class="container">
         <div class="row">
+            <nav class="navbar">
+                <ul>
+                    <li>
+                        <a class="nav-item" href="#pontiac-aztek">Pontiac Aztek</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#electrique">L'Œuf électrique</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#xp-21">Firebird 1 XP-21</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#cybertruck">Tesla Cybertruck</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#helicron">Helicron</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#scarab">Stout Scarab</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#karin">Citroën Karin</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#item-8">item 8</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#item-9">item 9</a>
+                    </li>
+                    <li>
+                        <a class="nav-item" href="#item-10">item 10</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div id="linebreak-for-nav"></div>
 
             <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="pontiac-aztek">
+                            <img class="card-img-top" src="images/aztek.jpeg" alt="Pontiac Aztek image">
+                            <div class="card-body">
+                                <h5 class="card-title">Pontiac Aztek</h5>
+                                <p class="card-text">A very ugly vehicle</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#aztek-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="electrique">
+                            <img class="card-img-top" src="images/Oeuf-electrique.jpeg" alt="Electric Egg Car Image">
+                            <div class="card-body">
+                                <h5 class="card-title">L'Œuf électrique</h5>
+                                <p class="card-text">Electric vehicle with 3 wheels made in 1942</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#electrique-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="xp-21">
+                            <img class="card-img-top" src="images/xp-21.jpeg" alt="XP-21 Image">
+                            <div class="card-body">
+                                <h5 class="card-title">GM Firebird 1 XP-21</h5>
+                                <p class="card-text">Jet airplane inspired vehicle</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#xp-21-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="cybertruck">
+                            <img class="card-img-top" src="images/cybertruck.jpeg" alt="Cybertruck image">
+                            <div class="card-body">
+                                <h5 class="card-title">Tesla Cybertruck</h5>
+                                <p class="card-text">Fully electric truck by Tesla</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#cybertruck-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="helicron">
+                            <img class="card-img-top" src="images/helicron.jpeg" alt="Helicron image">
+                            <div class="card-body">
+                                <h5 class="card-title">Helicron</h5>
+                                <p class="card-text">Open-wheel car with a propeller</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#helicron-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="scarab">
+                            <img class="card-img-top" src="images/scarab.jpeg" alt="Stout Scarab Image">
+                            <div class="card-body">
+                                <h5 class="card-title">Stout Scarab</h5>
+                                <p class="card-text">Considered by many to be the world's first minivan</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#scarab-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="karin">
+                            <img class="card-img-top" src="images/karin.png" alt="Citroën Karin Image">
+                            <div class="card-body">
+                                <h5 class="card-title">Citroën Karin</h5>
+                                <p class="card-text">Concept car created by Citroën in 1980</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#karin-modal">
+                                    More info
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="item-8">
+                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of
+                                    the card's content.</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="item-9">
+                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of
+                                    the card's content.</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card" style="width: 18rem;" id="item-10">
+                            <img class="card-img-top" src="images/black_image.jpeg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of
+                                    the card's content.</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="..." alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
+
+    <div class="modal fade" id="aztek-modal" tabindex="-1" role="dialog" aria-labelledby="aztek-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aztek-modal-label">Pontiac Aztek</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    A mid-size crossover SUV made by General Motors from 2001 to 2005. This vehicle has a V-6 engine and
+                    4-speed automatic transmission.
+                    Although the concept car was well accepted, sales for the production version were well under
+                    expectations. GM forecast sales of up to 75,000 Azteks per year and needed to produce 30,000
+                    annually to break even.
+                    Just 27,793 were sold in 2002, which was the model's best-selling year.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="electrique-modal" tabindex="-1" role="dialog" aria-labelledby="electrique-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="electrique-modal-label">L'Œuf électrique</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Also known as "The Electric Egg" in English.<br />
+                    This vehicle was made in 1942 and was very ahead of its time. It is very lightweight,
+                    making use of materials such as aluminum for the body and plexiglass for a total weight of 350 kg.
+                    This vehicle was originally made with an electric motor only, and later was given a single-cylinder
+                    gas engine.
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="xp-21-modal" tabindex="-1" role="dialog" aria-labelledby="xp-21-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="xp-21-modal-label">General Motors Firebird 1 XP-21</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Prototype car developed by General Motors in 1953 which used a jet engine. The car's engine was a
+                    370 HP Whirlfire Turbo Power gas turbine engine.
+                    The car weighed 2,500 lb. The vehicle was a single seater, with wings on the sides and a tail fin,
+                    emulating a jet. GM never tried to test the
+                    vehicle's top speed, instead they were just testing if the turbine engine was feasible for land
+                    vehicles.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cybertruck-modal" tabindex="-1" role="dialog" aria-labelledby="cybertruck-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cybertruck-modal-label">Tesla Cybertruck</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Upcoming pickup truck by Tesla that is powered fully electrically. The truck will have a towing
+                    capacity of 7,500 lbs, ground clearance of 16", and 100 cu ft of storage space,
+                    making this a very useful utility vehicle. The range for the base model is estimated at 250+ miles.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="helicron-modal" tabindex="-1" role="dialog" aria-labelledby="helicron-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helicron-modal-label">Helicron</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This is an open-wheel vehicle that uses a propeller to drive. This is a one-of-one vehicle that
+                    originally used a two cylinder engine. This vehicle only weighs 1000 lbs.
+                    This vehicle is steered and driven by the rear wheels. The top speed is 75 mph.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="scarab-modal" tabindex="-1" role="dialog" aria-labelledby="scarab-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scarab-modal-label">Stout Scarab</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    This is a 1930-1940 V8 powered rear-engine vehicle created by Stout Motor Car Company considered to
+                    be the first minivan. This was also the world's first car with a fiberglass body and air suspension.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="karin-modal" tabindex="-1" role="dialog" aria-labelledby="karin-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="karin-modal-label">Citroën Karin</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Citroën created this concept car for its 1980 Paris Salon stand to attract crowds to view it. This
+                    car was a 3-seater with the driver's seat located in the middle of the two passengers.
+                    The car had butterfly doors and a striking pyramidal design.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <script src="/js/vendor-min.js"></script>
 </body>
