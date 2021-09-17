@@ -15805,6 +15805,20 @@ a.close.disabled {
   align-items: baseline;
 }
 
+.page-header {
+  display: flex;
+  justify-content: center;
+}
+
+.row {
+  justify-content: center;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
 @media (max-width: 992px) {
   #linebreak-for-nav {
     width: 100%;

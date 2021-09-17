@@ -5,6 +5,21 @@
   align-items: baseline;
 }
 
+.page-header {
+  display: flex;
+  justify-content: center;
+}
+
+.row {
+  justify-content: center;
+}
+
+.card-container {
+  // centers card within its containing col
+  display: flex;
+  justify-content: center;
+}
+
 // <992px = 1 item, 992-1200 = 2 items, >1200 = 3 items per row
 @media (max-width: 992px) {
   #linebreak-for-nav {
