@@ -2,18 +2,12 @@
   <div class="show-info">
     <h1>{{show.name}}</h1>
     {{#if show.image.medium}}
-      <img src="{{show.image.medium}}" />
+      <img src="{{show.image.medium}}" alt="Image for {{show.name}}" />
     {{else}}
       <div>No Image Found</div>
     {{/if}}
-    {{#if show.rating.average}}
-      <div>Average rating: {{show.rating.average}}</div>
-    {{/if}}
-    {{#if show.summary}}
-      <div class="show-summary">{{{show.summary}}}</div>
-    {{/if}}
     {{#if show.genres}}
-      <h3>Genres</h3>
+      <h2>Genres</h2>
       <ul>
         {{#each show.genres}}
           <li>
@@ -21,6 +15,12 @@
           </li>
         {{/each}}
       </ul>
+    {{/if}}
+    {{#if show.rating.average}}
+      <div>Average rating: {{show.rating.average}}</div>
+    {{/if}}
+    {{#if show.summary}}
+      <div class="show-summary">{{{show.summary}}}</div>
     {{/if}}
     {{#if show.language}}
       <div>Language: {{show.language}}</div>
