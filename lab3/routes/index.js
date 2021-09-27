@@ -16,9 +16,10 @@ module.exports = (app) => {
         shows = await axios.get(SHOWS_ENDPOINT);
         shows = shows.data;
       } catch (e) {
-        return res
-          .status(500)
-          .send(`error getting shows at ${SHOWS_ENDPOINT}: ${e}`);
+        return res.status(500).render("homepage", {
+          pageTitle: "List of Shows",
+          error: `Error getting shows at ${SHOWS_ENDPOINT}: ${e}`,
+        });
       }
 
       return res.render(
@@ -36,8 +37,7 @@ module.exports = (app) => {
     const { id } = req.params;
 
     if (await client.existsAsync(`show-${id}`)) {
-      const cachedShowPageHtml = await client.getAsync(`show-${id}`);
-      return res.send(cachedShowPageHtml);
+      return res.send(await client.getAsync(`show-${id}`));
     } else {
       let show;
       try {

@@ -1,7 +1,11 @@
-<ul>
-  {{#each shows}}
-    <li>
-      <a href="/show/{{this.id}}" aria-label="show name">{{this.name}}</a>
-    </li>
-  {{/each}}
-</ul>
+{{#unless error}}
+  <ul>
+    {{#each shows}}
+      <li>
+        <a href="/show/{{this.id}}" aria-label="show name">{{this.name}}</a>
+      </li>
+    {{/each}}
+  </ul>
+{{else}}
+  <div>{{error}}</div>
+{{/unless}}
