@@ -44,8 +44,10 @@ module.exports = (app) => {
         show = await axios.get(`${SHOWS_ENDPOINT}/${id}`);
         show = show.data;
       } catch (e) {
-        // TODO finish 404 page
-        return res.send("404");
+        return res.status(404).render("show/show-info", {
+          pageTitle: "Show not found",
+          showInfoError: "Show not found",
+        });
       }
 
       return res.render(
@@ -62,17 +64,26 @@ module.exports = (app) => {
   app.post("/search", async (req, res) => {
     let { searchTerm } = req.body;
 
-    // TODO finish error pages for search
-    if (searchTerm == null) {
-      return res.status(400).json({ error: "No search term provided" });
+    if (searchTerm == null || searchTerm == "") {
+      return res.status(400).render("search", {
+        pageTitle: "Search Error",
+        searchError: "No search term provided",
+      });
     }
     if (typeof searchTerm !== "string") {
-      return res.status(400).json({ error: "Search term must be a string" });
+      return res.status(400).render("search", {
+        pageTitle: "Search Error",
+        searchError: "Search term must be a string",
+      });
     }
-    if (searchTerm.trim() === "") {
-      return res
-        .status(400)
-        .json({ error: "Search term must not be whitespace only" });
+
+    searchTerm = searchTerm.trim();
+
+    if (searchTerm === "") {
+      return res.status(400).render("search", {
+        pageTitle: "Search Error",
+        searchError: "Search term must not be whitespace only",
+      });
     }
 
     if (await client.zscoreAsync("top-searches", searchTerm.toLowerCase())) {
@@ -96,6 +107,13 @@ module.exports = (app) => {
       );
       searchResult = searchResult.data;
 
+      if (searchResult.length === 0) {
+        return res.status(404).render("search", {
+          pageTitle: "Search Results",
+          searchError: "No Shows Found",
+        });
+      }
+
       return res.render(
         "search",
         { pageTitle: "Search Results", searchResult },
@@ -108,17 +126,17 @@ module.exports = (app) => {
         }
       );
     } catch (e) {
-      // TODO finish 404 page for shows
-      return res.status(404).json({ error: "No shows found" });
+      return res.status(500).render("search", {
+        pageTitle: "Search Results",
+        searchError: "Error with search",
+      });
     }
   });
 
   app.get("/popularsearches", async (req, res) => {
     // display top 10 searches from sorted set "top-searches"
     // highest to lowest descending
-    // display in <ol>
-    // do not cache page
-
-    res.render("homepage");
+    const topTenSearches = await client.zrevrangeAsync("top-searches", 0, 9);
+    res.render("top-searches", { pageTitle: "Top Searches", topTenSearches });
   });
 };

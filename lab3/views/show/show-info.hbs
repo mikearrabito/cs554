@@ -1,6 +1,31 @@
-<div class="show-info">
-  <h1>{{show.name}}</h1>
-  <div class="show-summary">{{{show.summary}}}</div>
-  <p>image here</p>
-
-</div>
+{{#if show}}
+  <div class="show-info">
+    <h1>{{show.name}}</h1>
+    {{#if show.image.medium}}
+      <img src="{{show.image.medium}}" />
+    {{else}}
+      <div>No Image Found</div>
+    {{/if}}
+    {{#if show.rating.average}}
+      <div>Average rating: {{show.rating.average}}</div>
+    {{/if}}
+    {{#if show.summary}}
+      <div class="show-summary">{{{show.summary}}}</div>
+    {{/if}}
+    {{#if show.genres}}
+      <h3>Genres</h3>
+      <ul>
+        {{#each show.genres}}
+          <li>
+            {{this}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    {{#if show.language}}
+      <div>Language: {{show.language}}</div>
+    {{/if}}
+  </div>
+{{else}}
+  <div id="show-info-error">{{showInfoError}}</div>
+{{/if}}

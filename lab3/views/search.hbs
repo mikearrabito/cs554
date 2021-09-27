@@ -1,9 +1,13 @@
 <div id="search-results">
-  <ul>
-    {{#each searchResult}}
-      <li>
-        <a href="/show/{{this.show.id}}">{{this.show.name}}</a>
-      </li>
-    {{/each}}
-  </ul>
+  {{#if searchError}}
+    <div id="search-error">{{searchError}}</div>
+  {{else}}
+    <ul>
+      {{#each searchResult}}
+        <li>
+          <a href="/show/{{this.show.id}}">{{this.show.name}}</a>
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
 </div>
