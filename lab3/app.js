@@ -1,4 +1,3 @@
-const { urlencoded } = require("express");
 const express = require("express");
 const exphbs = require("express-handlebars");
 const configRoutes = require("./routes");
@@ -14,7 +13,6 @@ const handlebarsInstance = exphbs.create({
 app.engine("hbs", handlebarsInstance.engine);
 app.set("view engine", "hbs");
 
-app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
