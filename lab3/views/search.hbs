@@ -1,0 +1,9 @@
+<div id="search-results">
+  <ul>
+    {{#each searchResult}}
+      <li>
+        <a href="/show/{{this.show.id}}">{{this.show.name}}</a>
+      </li>
+    {{/each}}
+  </ul>
+</div>
