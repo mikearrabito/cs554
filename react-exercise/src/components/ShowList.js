@@ -62,6 +62,7 @@ const ShowList = (props) => {
   const [searchData, setSearchData] = useState(undefined);
   const [showsData, setShowsData] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLastPage, setIsLastPage] = useState(false);
 
   const history = useHistory();
 
@@ -71,14 +72,25 @@ const ShowList = (props) => {
 
   useEffect(() => {
     const fetchData = async (pageNum) => {
+      setIsLastPage(false);
       try {
         const { data } = await axios.get(
           `http://api.tvmaze.com/shows?page=${pageNum - 1}`
         ); // decrement since api uses 0 based page num
         setShowsData(data);
+
+        // attempt getting next page,
+        // if 404 error, then set islastpage to true
+        try {
+          await axios.get(`http://api.tvmaze.com/shows?page=${pageNum}`);
+        } catch (e) {
+          // error fetching next page
+          setIsLastPage(true);
+        }
+
         setLoading(false);
       } catch (e) {
-        history.replace("/shows/page/233"); // given page is too high, just redirect to last known good page
+        history.replace("/shows/page/1"); // given page is too high, just redirect to first page
       }
     };
     if (isNaN(parseInt(pageNum)) || parseInt(pageNum) < 1) {
@@ -179,7 +191,7 @@ const ShowList = (props) => {
   };
   const nextPage = () => {
     // check if next page has 404
-    if (parseInt(pageNum) >= 233) {
+    if (isLastPage) {
       return;
     }
     setLoading(true);
@@ -210,10 +222,10 @@ const ShowList = (props) => {
                 >
                   prev
                 </Button>
-                {parseInt(pageNum) < 233 && <div style={{ width: "5%" }} />}
+                {!isLastPage && <div style={{ width: "5%" }} />}
               </>
             )}
-            {parseInt(pageNum) < 233 && (
+            {!isLastPage && (
               <Button onClick={nextPage} variant="contained">
                 next
               </Button>
