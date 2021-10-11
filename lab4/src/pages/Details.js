@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { getMarvelData } from "../api";
-import CharacterCard from "../components/CharacterCard";
+import InfoCard from "../components/InfoCard";
 
-const CharacterDetails = (props) => {
+const Details = (props) => {
   const id = parseInt(props?.match?.params?.id);
+  const { section } = props?.match?.params;
+
   const [charData, setCharData] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getMarvelData("characters", id, false);
+        const data = await getMarvelData(section, id, false);
         if (data.results.length) {
           setCharData(data.results);
         } else {
@@ -21,12 +23,16 @@ const CharacterDetails = (props) => {
         history.replace("/not-found"); // no results found for this given id
       }
     };
-    if (id !== null && id !== undefined && !isNaN(id) && id > 0) {
+    if (
+      !isNaN(id) &&
+      id >= 0 &&
+      (section === "characters" || section === "comics" || section === "series")
+    ) {
       fetchData();
     } else {
-      history.replace("/not-found"); // invalid id given
+      history.replace("/not-found"); // invalid id given or invalid section
     }
-  }, [history, id]);
+  }, [history, section, id]);
 
   useEffect(() => {
     return () => {
@@ -36,9 +42,11 @@ const CharacterDetails = (props) => {
 
   return (
     <>
-      {charData !== null && <CharacterCard charInfo={charData[0]} detailed />}
+      {charData !== null && (
+        <InfoCard info={charData[0]} detailed section={section} />
+      )}
     </>
   );
 };
 
-export default CharacterDetails;
+export default Details;

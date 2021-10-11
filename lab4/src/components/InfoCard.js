@@ -7,21 +7,21 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const CharacterCard = (props) => {
-  const { charInfo, detailed } = props;
+const InfoCard = (props) => {
+  const { info, detailed, section } = props;
 
   return (
     <Card>
       <CardActionArea>
         <Link
-          to={`/characters/${charInfo.id}`}
+          to={`/${section}/${info.id}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
           <CardMedia
             component="img"
-            alt={`${charInfo.name} image`}
+            alt={`${info.name} image`}
             height="200"
-            image={`${charInfo.thumbnail.path}.${charInfo.thumbnail.extension}`}
+            image={`${info.thumbnail.path}.${info.thumbnail.extension}`}
             style={{ objectFit: "contain" }}
           />
           <CardContent>
@@ -30,11 +30,11 @@ const CharacterCard = (props) => {
               align="center"
               style={{ fontSize: "2rem" }}
             >
-              {charInfo.name}
+              {info.name}
             </Typography>
             {detailed && (
               <div
-                id="character-details"
+                id={`${section}-details`}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -51,4 +51,4 @@ const CharacterCard = (props) => {
   );
 };
 
-export default CharacterCard;
+export default InfoCard;

@@ -1,3 +1,5 @@
 const SearchForm = (props) => {
-  return <div>search here</div>;
+  return <div>Search form here</div>;
 };
+
+export default SearchForm;

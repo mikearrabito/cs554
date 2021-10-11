@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import CharacterCard from "../components/CharacterCard";
+import InfoCard from "../components/InfoCard";
+import SearchForm from "../components/SearchForm";
 
 const ResultsListPage = (props) => {
   const { match } = props;
   const pageNum = parseInt(match?.params?.page);
-  const section = match.params.section; // characters or comics or series
+  const { section } = match?.params; // characters or comics or series
 
   const [marvelData, setMarvelData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,10 +75,19 @@ const ResultsListPage = (props) => {
           <LinearProgress />
         </>
       ) : (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h1" align="center" style={{ fontSize: "3rem" }}>
-            Marvel {section[0].toUpperCase() + section.slice(1)}
+            Marvel{" "}
+            {section?.length && section[0].toUpperCase() + section.slice(1)}
           </Typography>
+          <SearchForm />
           {totalPages !== null && (
             <Pagination
               hidePrevButton={pageNum === 0}
@@ -117,7 +127,7 @@ const ResultsListPage = (props) => {
               {marvelData.map((item) => {
                 return (
                   <Grid item key={item.id}>
-                    <CharacterCard charInfo={item} />
+                    <InfoCard info={item} section={section} />
                   </Grid>
                 );
               })}
