@@ -143,7 +143,7 @@ const ResultsListPage = (props) => {
               color="standard"
               size="large"
               getItemAriaLabel={(type, page, selected) => {
-                return page ? `${type}-${page}-${selected}` : null;
+                return page ? `${type}-${page}-${selected}` : undefined;
               }}
               style={{
                 display: "flex",
@@ -153,7 +153,11 @@ const ResultsListPage = (props) => {
               renderItem={(item) => (
                 <PaginationItem
                   component={Link}
-                  to={item.page >= 1 && `/${section}/page/${item.page - 1}`}
+                  to={
+                    item.page >= 1
+                      ? `/${section}/page/${item.page - 1}`
+                      : undefined
+                  }
                   {...item}
                 />
               )}
