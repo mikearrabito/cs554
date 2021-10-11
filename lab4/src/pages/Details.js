@@ -8,6 +8,7 @@ const Details = (props) => {
   const { section } = props?.match?.params;
 
   const [data, setData] = useState(null);
+
   const history = useHistory();
 
   useEffect(() => {

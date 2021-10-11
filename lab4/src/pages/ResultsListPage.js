@@ -6,6 +6,7 @@ import {
   Typography,
   LinearProgress,
   Grid,
+  Button,
 } from "@mui/material";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
@@ -91,14 +92,56 @@ const ResultsListPage = (props) => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h1" align="center" style={{ fontSize: "3rem" }}>
+          <Typography
+            variant="h1"
+            align="center"
+            style={{ fontSize: "3.4rem" }}
+          >
             Marvel{" "}
             {section?.length && section[0].toUpperCase() + section.slice(1)}
           </Typography>
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            <Button
+              component={Link}
+              to="/"
+              variant="outlined"
+              style={{ marginRight: "10px" }}
+            >
+              Main Page
+            </Button>
+            {section !== "characters" && (
+              <Button
+                component={Link}
+                to="/characters/page/0"
+                variant="outlined"
+                style={{ marginRight: "10px" }}
+              >
+                Characters
+              </Button>
+            )}
+            {section !== "comics" && (
+              <Button
+                component={Link}
+                to="/comics/page/0"
+                variant="outlined"
+                style={{ marginRight: "10px" }}
+              >
+                Comics
+              </Button>
+            )}
+            {section !== "series" && (
+              <Button component={Link} to="/series/page/0" variant="outlined">
+                Series
+              </Button>
+            )}
+          </div>
           {totalPages !== null && (
             <Pagination
               hidePrevButton={pageNum === 0}
-              hideNextButton={pageNum === totalPages - 1}
               color="primary"
               count={totalPages}
               page={pageNum + 1}
@@ -132,27 +175,19 @@ const ResultsListPage = (props) => {
                 flexGrow: "1",
               }}
             >
-              {searchTerm === ""
-                ? marvelData.map((item) => {
-                    return (
-                      <Grid item key={item.id}>
-                        <InfoCard info={item} section={section} />
-                      </Grid>
-                    );
-                  })
-                : marvelData
-                    .filter((item) => {
-                      return item.name
-                        ? item.name.toLowerCase().includes(searchTerm)
-                        : item.title.toLowerCase().includes(searchTerm);
-                    })
-                    .map((item) => {
-                      return (
-                        <Grid item key={item.id}>
-                          <InfoCard info={item} section={section} />
-                        </Grid>
-                      );
-                    })}
+              {marvelData
+                .filter((item) => {
+                  return item.name
+                    ? item.name.toLowerCase().includes(searchTerm)
+                    : item.title.toLowerCase().includes(searchTerm);
+                })
+                .map((item) => {
+                  return (
+                    <Grid item key={item.id}>
+                      <InfoCard info={item} section={section} />
+                    </Grid>
+                  );
+                })}
             </Grid>
           )}
         </div>

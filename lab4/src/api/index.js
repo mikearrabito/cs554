@@ -20,7 +20,7 @@ export const getMarvelData = async (section, num, isPage) => {
 
   const ts = new Date().getTime();
   const hash = md5(ts + privatekey + publickey);
-  let url = `${baseUrl}/${section}`; // url/characters or comics or series
+  let url = `${baseUrl}/${section}`;
 
   if (isPage === false) {
     url += `/${num}`;
