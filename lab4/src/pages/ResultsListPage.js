@@ -11,24 +11,27 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import CharacterCard from "../components/CharacterCard";
 
-export default function CharactersPage(props) {
+const ResultsListPage = (props) => {
+  const { match } = props;
+  const pageNum = parseInt(match?.params?.page);
+  const section = match.params.section; // characters or comics or series
+
   const [marvelData, setMarvelData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(null);
-  const { match } = props;
-  const pageNum = parseInt(match?.params?.page);
+
   const history = useHistory();
 
   useEffect(() => {
     const fetchPage = async () => {
       try {
         setLoading(true);
-        const data = await getMarvelData("characters", pageNum, true);
+        const data = await getMarvelData(section, pageNum, true);
 
         if (totalPages === null) {
           const total = parseInt(data.total);
           const perPage = parseInt(data.limit);
-          setTotalPages(parseInt(total / perPage) + 1);
+          setTotalPages(Math.ceil(total / perPage)); // ceiling of total/perPage, since last page can have <= perPage results
         }
 
         if (data.results.length === 0) {
@@ -44,12 +47,16 @@ export default function CharactersPage(props) {
         setLoading(false);
       }
     };
-    if (!isNaN(pageNum) || pageNum >= 0) {
+    if (
+      !isNaN(pageNum) &&
+      pageNum >= 0 &&
+      (section === "characters" || section === "comics" || section === "series")
+    ) {
       fetchPage();
     } else {
-      history.replace("/not-found"); // invalid page given in url
+      history.replace("/not-found"); // invalid pageNum given, or invalid section
     }
-  }, [pageNum, totalPages, history]);
+  }, [pageNum, section, totalPages, history]);
 
   useEffect(() => {
     // fix for memory leak error in console when redirecting to 404 page
@@ -69,7 +76,7 @@ export default function CharactersPage(props) {
       ) : (
         <div>
           <Typography variant="h1" align="center" style={{ fontSize: "3rem" }}>
-            Marvel Characters
+            Marvel {section[0].toUpperCase() + section.slice(1)}
           </Typography>
           {totalPages !== null && (
             <Pagination
@@ -88,7 +95,7 @@ export default function CharactersPage(props) {
               renderItem={(item) => (
                 <PaginationItem
                   component={Link}
-                  to={`/characters/page/${item.page - 1}`}
+                  to={`/${section}/page/${item.page - 1}`}
                   {...item}
                 />
               )}
@@ -120,4 +127,6 @@ export default function CharactersPage(props) {
       )}
     </div>
   );
-}
+};
+
+export default ResultsListPage;

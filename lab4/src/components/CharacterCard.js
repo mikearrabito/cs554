@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function CharacterCard(props) {
-  const { charInfo } = props;
+const CharacterCard = (props) => {
+  const { charInfo, detailed } = props;
 
   return (
     <Card>
@@ -32,9 +32,23 @@ export default function CharacterCard(props) {
             >
               {charInfo.name}
             </Typography>
+            {detailed && (
+              <div
+                id="character-details"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography>more info here</Typography>
+              </div>
+            )}
           </CardContent>
         </Link>
       </CardActionArea>
     </Card>
   );
-}
+};
+
+export default CharacterCard;

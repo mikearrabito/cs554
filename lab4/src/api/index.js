@@ -9,7 +9,6 @@ export const getMarvelData = async (section, num, isPage) => {
   // section == characters || comics || series
   // num is id for single or pageNum if isPage is set to true
   // isPage is bool, if false return single item with id num, else return page num
-
   if (
     section === null ||
     section === undefined ||
@@ -31,22 +30,19 @@ export const getMarvelData = async (section, num, isPage) => {
         ts,
         hash,
       },
-    });
+    }); // handle 404 at the calling component
     return response.data.data;
-    // handle 404 at the calling component
   } else {
     // page based on second param passed
-    const pageNum = num;
-
     const response = await axios.get(url, {
       params: {
         apikey: publickey,
         ts,
         hash,
-        offset: 20 * pageNum, // 20 per page, multiple 20 by pagenum to get offset (20*0 = 0 for page 0, then offset of 20 for page 1, etc)
+        limit: 20, // default value, leaving it here for clarity
+        offset: 20 * num, // 20 per page, multiply 20 by pagenum to get offset (20*0 = 0 for page 0, then offset of 20 for page 1, etc)
       },
     });
-
     return response.data.data;
   }
 };

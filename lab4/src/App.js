@@ -1,24 +1,23 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import CharacterDetails from "./pages/CharacterDetails";
-import CharactersPage from "./pages/CharactersPage";
+import ResultsListPage from "./pages/ResultsListPage";
 import NotFound from "./pages/NotFound";
+import StartPage from "./pages/StartPage";
 
-export default function App() {
+const App = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/" exact>
-          main page
-        </Route>
-        <Route path="/characters/page/:page" exact component={CharactersPage} />
+        <Route path="/" exact component={StartPage} />
+        <Route path="/:section/page/:page" exact component={ResultsListPage} />
         <Route path="/characters/:id" exact component={CharacterDetails} />
-        <Route path="/comics/page/:page" exact />
         <Route path="/comics/:id" exact />
-        <Route path="/series/page/:page" exact />
         <Route path="/series/:id" exact />
         <Route path="/not-found" exact component={NotFound} />
         <Route path="*" component={NotFound} />
       </Switch>
     </Router>
   );
-}
+};
+
+export default App;

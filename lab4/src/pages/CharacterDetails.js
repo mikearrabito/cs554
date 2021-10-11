@@ -3,8 +3,8 @@ import { useHistory } from "react-router";
 import { getMarvelData } from "../api";
 import CharacterCard from "../components/CharacterCard";
 
-export default function CharacterDetails({ match }) {
-  const id = parseInt(match?.params?.id);
+const CharacterDetails = (props) => {
+  const id = parseInt(props?.match?.params?.id);
   const [charData, setCharData] = useState(null);
   const history = useHistory();
 
@@ -18,13 +18,13 @@ export default function CharacterDetails({ match }) {
           throw new Error("No results found");
         }
       } catch (e) {
-        history.push("/not-found"); // no results found for this given id
+        history.replace("/not-found"); // no results found for this given id
       }
     };
     if (id !== null && id !== undefined && !isNaN(id) && id > 0) {
       fetchData();
     } else {
-      history.push("/not-found"); // invalid id given
+      history.replace("/not-found"); // invalid id given
     }
   }, [history, id]);
 
@@ -34,5 +34,11 @@ export default function CharacterDetails({ match }) {
     };
   }, []);
 
-  return <>{charData !== null && <CharacterCard charInfo={charData[0]} />}</>;
-}
+  return (
+    <>
+      {charData !== null && <CharacterCard charInfo={charData[0]} detailed />}
+    </>
+  );
+};
+
+export default CharacterDetails;
