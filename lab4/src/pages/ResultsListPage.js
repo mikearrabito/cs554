@@ -29,14 +29,14 @@ const ResultsListPage = (props) => {
     const fetchPage = async () => {
       try {
         setSearchTerm("");
+        setTotalPages(null);
         setLoading(true);
+
         const data = await getMarvelData(section, pageNum, true);
 
-        if (totalPages === null) {
-          const total = parseInt(data.total);
-          const perPage = parseInt(data.limit);
-          setTotalPages(Math.ceil(total / perPage)); // ceiling of total/perPage, since last page can have <= perPage results
-        }
+        const total = parseInt(data.total);
+        const perPage = parseInt(data.limit);
+        setTotalPages(Math.ceil(total / perPage)); // ceiling of total/perPage, since last page can have <= perPage results
 
         if (data.results.length === 0) {
           throw new Error("No data found for this page");
@@ -60,7 +60,7 @@ const ResultsListPage = (props) => {
     } else {
       history.replace("/not-found"); // invalid pageNum given, or invalid section
     }
-  }, [pageNum, section, totalPages, history]);
+  }, [pageNum, section, history]);
 
   useEffect(() => {
     // fix for memory leak error in console when redirecting to 404 page
