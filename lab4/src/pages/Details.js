@@ -7,15 +7,15 @@ const Details = (props) => {
   const id = parseInt(props?.match?.params?.id);
   const { section } = props?.match?.params;
 
-  const [charData, setCharData] = useState(null);
+  const [data, setData] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getMarvelData(section, id, false);
-        if (data.results.length) {
-          setCharData(data.results);
+        const marvelData = await getMarvelData(section, id, false);
+        if (marvelData?.results?.length) {
+          setData(marvelData.results);
         } else {
           throw new Error("No results found");
         }
@@ -36,15 +36,13 @@ const Details = (props) => {
 
   useEffect(() => {
     return () => {
-      setCharData(null);
+      setData(null);
     };
   }, []);
 
   return (
     <>
-      {charData !== null && (
-        <InfoCard info={charData[0]} detailed section={section} />
-      )}
+      {data !== null && <InfoCard info={data[0]} detailed section={section} />}
     </>
   );
 };

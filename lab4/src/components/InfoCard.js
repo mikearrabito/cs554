@@ -10,18 +10,20 @@ import { Link } from "react-router-dom";
 const InfoCard = (props) => {
   const { info, detailed, section } = props;
 
+  const name = section === "characters" ? info?.name : info?.title;
+
   return (
     <Card>
       <CardActionArea>
         <Link
-          to={`/${section}/${info.id}`}
+          to={`/${section}/${info?.id}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
           <CardMedia
             component="img"
-            alt={`${info.name} image`}
+            alt={`${name} image`}
             height="200"
-            image={`${info.thumbnail.path}.${info.thumbnail.extension}`}
+            image={`${info?.thumbnail?.path}.${info?.thumbnail?.extension}`}
             style={{ objectFit: "contain" }}
           />
           <CardContent>
@@ -30,7 +32,7 @@ const InfoCard = (props) => {
               align="center"
               style={{ fontSize: "2rem" }}
             >
-              {info.name}
+              {name}
             </Typography>
             {detailed && (
               <div

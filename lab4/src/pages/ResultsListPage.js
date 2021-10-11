@@ -20,12 +20,14 @@ const ResultsListPage = (props) => {
   const [marvelData, setMarvelData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const history = useHistory();
 
   useEffect(() => {
     const fetchPage = async () => {
       try {
+        setSearchTerm("");
         setLoading(true);
         const data = await getMarvelData(section, pageNum, true);
 
@@ -65,8 +67,14 @@ const ResultsListPage = (props) => {
       setLoading(null);
       setMarvelData(null);
       setTotalPages(null);
+      setSearchTerm(null);
     };
   }, []);
+
+  const filterResults = (input) => {
+    // callback passed to search form to trigger update on results page
+    setSearchTerm(input.toLowerCase()); // store in lower case for case insensitive comparison
+  };
 
   return (
     <div>
@@ -87,7 +95,6 @@ const ResultsListPage = (props) => {
             Marvel{" "}
             {section?.length && section[0].toUpperCase() + section.slice(1)}
           </Typography>
-          <SearchForm />
           {totalPages !== null && (
             <Pagination
               hidePrevButton={pageNum === 0}
@@ -111,6 +118,7 @@ const ResultsListPage = (props) => {
               )}
             />
           )}
+          <SearchForm updateFn={filterResults} />
           {marvelData !== null && (
             <Grid
               container
@@ -124,13 +132,27 @@ const ResultsListPage = (props) => {
                 flexGrow: "1",
               }}
             >
-              {marvelData.map((item) => {
-                return (
-                  <Grid item key={item.id}>
-                    <InfoCard info={item} section={section} />
-                  </Grid>
-                );
-              })}
+              {searchTerm === ""
+                ? marvelData.map((item) => {
+                    return (
+                      <Grid item key={item.id}>
+                        <InfoCard info={item} section={section} />
+                      </Grid>
+                    );
+                  })
+                : marvelData
+                    .filter((item) => {
+                      return item.name
+                        ? item.name.toLowerCase().includes(searchTerm)
+                        : item.title.toLowerCase().includes(searchTerm);
+                    })
+                    .map((item) => {
+                      return (
+                        <Grid item key={item.id}>
+                          <InfoCard info={item} section={section} />
+                        </Grid>
+                      );
+                    })}
             </Grid>
           )}
         </div>
