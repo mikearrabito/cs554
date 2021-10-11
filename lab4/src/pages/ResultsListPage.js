@@ -72,11 +72,6 @@ const ResultsListPage = (props) => {
     };
   }, []);
 
-  const filterResults = (input) => {
-    // callback passed to search form to trigger update on results page
-    setSearchTerm(input.toLowerCase()); // store in lower case for case insensitive comparison
-  };
-
   return (
     <div>
       {loading ? (
@@ -142,11 +137,14 @@ const ResultsListPage = (props) => {
           {totalPages !== null && (
             <Pagination
               hidePrevButton={pageNum === 0}
-              color="primary"
               count={totalPages}
               page={pageNum + 1}
               variant="outlined"
+              color="standard"
               size="large"
+              getItemAriaLabel={(type, page, selected) => {
+                return page ? `${type}-${page}-${selected}` : null;
+              }}
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -155,13 +153,17 @@ const ResultsListPage = (props) => {
               renderItem={(item) => (
                 <PaginationItem
                   component={Link}
-                  to={`/${section}/page/${item.page - 1}`}
+                  to={item.page >= 1 && `/${section}/page/${item.page - 1}`}
                   {...item}
                 />
               )}
             />
           )}
-          <SearchForm updateFn={filterResults} />
+          <SearchForm
+            callback={(input) => {
+              setSearchTerm(input.toLowerCase());
+            }}
+          />
           {marvelData !== null && (
             <Grid
               container

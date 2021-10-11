@@ -2,14 +2,14 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 
 const SearchForm = (props) => {
-  const { updateFn } = props;
+  const { callback } = props;
 
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchInput = (e) => {
     e.preventDefault();
     setSearchTerm(e.target.value); // update value in textfield
-    updateFn(e.target.value); // propagate value back to parent
+    callback(e.target.value); // propagate value back to parent
   };
 
   return (

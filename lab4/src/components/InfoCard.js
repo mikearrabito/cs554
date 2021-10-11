@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardActionArea,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import CharacterDetails from "../components/CharacterDetails";
 import ComicDetails from "./ComicDetails";
@@ -17,29 +11,27 @@ const InfoCard = (props) => {
   return (
     <Card>
       {!detailed ? (
-        <CardActionArea>
-          <Link
-            to={`/${section}/${info?.id}`}
-            style={{ textDecoration: "none", color: "blue" }}
-          >
-            <CardMedia
-              component="img"
-              alt={`${name} image`}
-              height="200"
-              image={`${info?.thumbnail?.path}.${info?.thumbnail?.extension}`}
-              style={{ objectFit: "contain" }}
-            />
-            <CardContent>
-              <Typography
-                variant="h2"
-                align="center"
-                style={{ fontSize: "2rem" }}
-              >
-                {name}
-              </Typography>
-            </CardContent>
-          </Link>
-        </CardActionArea>
+        <Link
+          to={`/${section}/${info?.id}`}
+          style={{ textDecoration: "none", color: "blue" }}
+        >
+          <CardMedia
+            component="img"
+            alt={`${name} image`}
+            height="200"
+            image={`${info?.thumbnail?.path}.${info?.thumbnail?.extension}`}
+            style={{ objectFit: "contain" }}
+          />
+          <CardContent>
+            <Typography
+              variant="h2"
+              align="center"
+              style={{ fontSize: "2rem" }}
+            >
+              {name}
+            </Typography>
+          </CardContent>
+        </Link>
       ) : (
         <>
           <CardMedia
