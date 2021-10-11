@@ -11,7 +11,7 @@ const CharacterDetails = (props) => {
           {info.description.replace(/<\/?[^>]+(>|$)/g, "")}
         </Typography>
       )}
-      {info.comics?.items?.length && (
+      {info.comics?.items?.length > 0 && (
         <div style={{ marginTop: "6px" }}>
           <Typography variant="h2" style={{ fontSize: "2rem" }}>
             Comics
@@ -36,7 +36,7 @@ const CharacterDetails = (props) => {
           </List>
         </div>
       )}
-      {info.series?.items?.length && (
+      {info.series?.items?.length > 0 && (
         <div style={{ marginTop: "6px" }}>
           <Typography variant="h2" style={{ fontSize: "2rem" }}>
             Series
@@ -61,7 +61,7 @@ const CharacterDetails = (props) => {
           </List>
         </div>
       )}
-      {info.stories?.items?.length && (
+      {info.stories?.items?.length > 0 && (
         <div style={{ marginTop: "6px" }}>
           <Typography variant="h2" style={{ fontSize: "2rem" }}>
             Stories
