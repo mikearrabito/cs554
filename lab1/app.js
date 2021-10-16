@@ -39,7 +39,7 @@ app.use("/blog/:id", async (req, res, next) => {
     }
     const blog = await blogs.getBlogById(blogId);
     if (blog == null) {
-      return res.status(400).json({ error: "Blog not found" });
+      return res.status(404).json({ error: "Blog not found" });
     }
     if (blog.userThatPosted?._id !== req.session.AuthCookie.user._id) {
       return res.status(403).json({ error: "Unauthorized" });
