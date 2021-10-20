@@ -137,6 +137,7 @@ const ResultsListPage = (props) => {
           {totalPages !== null && (
             <Pagination
               hidePrevButton={pageNum === 0}
+              hideNextButton={pageNum === totalPages - 1}
               count={totalPages}
               page={pageNum + 1}
               variant="outlined"
