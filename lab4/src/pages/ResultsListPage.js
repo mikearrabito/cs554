@@ -1,5 +1,5 @@
 import { getMarvelData } from "../api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationItem,
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { SearchContext } from "../App";
 import InfoCard from "../components/InfoCard";
 import SearchForm from "../components/SearchForm";
 
@@ -21,14 +22,13 @@ const ResultsListPage = (props) => {
   const [marvelData, setMarvelData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const history = useHistory();
+  const { setSearchValues } = useContext(SearchContext);
 
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        setSearchTerm("");
         setTotalPages(null);
         setLoading(true);
 
@@ -68,9 +68,13 @@ const ResultsListPage = (props) => {
       setLoading(null);
       setMarvelData(null);
       setTotalPages(null);
-      setSearchTerm(null);
     };
   }, []);
+
+  const submitSearch = (searchTerm) => {
+    setSearchValues({ searchTerm, section, fromPage: pageNum });
+    history.push("/search");
+  };
 
   return (
     <div>
@@ -93,7 +97,7 @@ const ResultsListPage = (props) => {
             style={{ fontSize: "3.4rem" }}
           >
             Marvel{" "}
-            {section?.length && section[0].toUpperCase() + section.slice(1)}
+            {section?.length > 0 && section[0].toUpperCase() + section.slice(1)}
           </Typography>
           <div
             style={{
@@ -164,11 +168,7 @@ const ResultsListPage = (props) => {
               )}
             />
           )}
-          <SearchForm
-            callback={(input) => {
-              setSearchTerm(input.toLowerCase());
-            }}
-          />
+          <SearchForm callback={submitSearch} />
           {marvelData !== null && (
             <Grid
               container
@@ -182,19 +182,13 @@ const ResultsListPage = (props) => {
                 flexGrow: "1",
               }}
             >
-              {marvelData
-                .filter((item) => {
-                  return item.name
-                    ? item.name.toLowerCase().includes(searchTerm)
-                    : item.title.toLowerCase().includes(searchTerm);
-                })
-                .map((item) => {
-                  return (
-                    <Grid item key={item.id}>
-                      <InfoCard info={item} section={section} />
-                    </Grid>
-                  );
-                })}
+              {marvelData.map((item) => {
+                return (
+                  <Grid item key={item.id}>
+                    <InfoCard info={item} section={section} />
+                  </Grid>
+                );
+              })}
             </Grid>
           )}
         </div>

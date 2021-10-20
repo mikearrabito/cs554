@@ -46,3 +46,36 @@ export const getMarvelData = async (section, num, isPage) => {
     return response.data.data;
   }
 };
+
+export const searchMarvelData = async (section, searchTerm, page) => {
+  if (
+    section !== "characters" &&
+    section !== "series" &&
+    section !== "comics"
+  ) {
+    throw new Error("Invalid search catergory");
+  }
+  if (typeof searchTerm !== "string" || searchTerm.trim() === "") {
+    throw new Error(
+      "Invalid search term, must be string and must not only be whitespace"
+    );
+  }
+  const ts = new Date().getTime();
+  const hash = md5(ts + privatekey + publickey);
+
+  const searchParam =
+    section === "characters" ? "nameStartsWith" : "titleStartsWith";
+  const url = `${baseUrl}/${section}`;
+
+  const response = await axios.get(url, {
+    params: {
+      apikey: publickey,
+      ts,
+      hash,
+      [searchParam]: searchTerm,
+      limit: 20,
+      offset: 20 * page,
+    },
+  });
+  return response.data.data;
+};

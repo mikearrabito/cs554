@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { useState } from "react";
 
 const SearchForm = (props) => {
@@ -8,19 +8,36 @@ const SearchForm = (props) => {
 
   const handleSearchInput = (e) => {
     e.preventDefault();
-    setSearchTerm(e.target.value); // update value in textfield
-    callback(e.target.value); // propagate value back to parent
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim() === "") {
+      setSearchTerm("");
+    } else {
+      callback(searchTerm.trim().toLowerCase());
+    }
   };
 
   return (
-    <TextField
-      id="search-form"
-      label="Search"
-      variant="outlined"
-      style={{ margin: "8px" }}
-      value={searchTerm}
-      onChange={handleSearchInput}
-    />
+    <form
+      style={{ display: "flex", alignItems: "center" }}
+      onSubmit={handleSubmit}
+    >
+      <TextField
+        id="search-form"
+        label="Search"
+        variant="outlined"
+        size="small"
+        style={{ margin: "8px" }}
+        value={searchTerm}
+        onChange={handleSearchInput}
+      />
+      <Button variant="outlined" type="submit">
+        Search
+      </Button>
+    </form>
   );
 };
 
