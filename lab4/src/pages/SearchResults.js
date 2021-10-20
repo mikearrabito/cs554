@@ -47,11 +47,11 @@ const SearchResults = () => {
       }
     };
     if (
-      section === "characters" ||
-      section === "comics" ||
-      (section === "series" &&
-        typeof searchTerm === "string" &&
-        searchTerm.trim() !== "")
+      (section === "characters" ||
+        section === "comics" ||
+        section === "series") &&
+      typeof searchTerm === "string" &&
+      searchTerm.trim() !== ""
     ) {
       search();
     } else {
