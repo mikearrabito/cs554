@@ -1,4 +1,5 @@
-const { ApolloServer, gql } = require("apollo-server");
+require("dotenv").config();
+const { ApolloServer } = require("apollo-server");
 const typeDefs = require("./gql-schema");
 const resolvers = require("./gql-resolvers");
 

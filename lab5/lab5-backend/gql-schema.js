@@ -7,7 +7,7 @@ module.exports = gql`
     userPostedImages: [ImagePost]
   }
 
-  type Mutations {
+  type Mutation {
     uploadImage(
       url: String!
       description: String
