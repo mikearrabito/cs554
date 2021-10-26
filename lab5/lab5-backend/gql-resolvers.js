@@ -36,10 +36,26 @@ module.exports = {
       return images;
     },
     binnedImages: async (parent, args, context, info) => {
-      // TODO
+      const data = await redisClient.hVals("images");
+      const images = [];
+      for (const val of data) {
+        const image = JSON.parse(val);
+        if (image.binned === true) {
+          images.push(image);
+        }
+      }
+      return images;
     },
     userPostedImages: async (parent, args, context, info) => {
-      // TODO
+      const data = await redisClient.hVals("images");
+      const images = [];
+      for (const val of data) {
+        const image = JSON.parse(val);
+        if (image.userPosted === true) {
+          images.push(image);
+        }
+      }
+      return images;
     },
   },
   Mutation: {
@@ -60,9 +76,39 @@ module.exports = {
       return image;
     },
     updateImage: async (parent, args, context, info) => {
-      const { id, url, posterName, description, userPosted, binned } = args;
-      let image = {};
-      // TODO
+      let { id, url, posterName, description, userPosted, binned } = args;
+
+      let oldImage;
+      if (await redisClient.hExists("images", id)) {
+        oldImage = await redisClient.hGet("images", id);
+        oldImage = JSON.parse(oldImage);
+      }
+      if (oldImage) {
+        url = url ?? oldImage.url;
+        posterName = posterName ?? oldImage.posterName;
+        description = description ?? oldImage.description;
+        userPosted = userPosted ?? oldImage.userPosted;
+        binned = binned ?? oldImage.binned;
+      }
+
+      let image = {
+        id,
+        url,
+        posterName,
+        description,
+        userPosted,
+        binned,
+      };
+
+      if (!((await redisClient.hExists("images", id)) && binned === true)) {
+        await redisClient.hSet("images", id, JSON.stringify(image));
+      }
+      if (binned === false && userPosted === false) {
+        await redisClient.hDel("images", id);
+      }
+      if (await redisClient.hExists("images", id)) {
+        redisClient.hSet("images", id, JSON.stringify(image));
+      }
       return image;
     },
     deleteImage: async (parent, args, context, info) => {
@@ -73,12 +119,4 @@ module.exports = {
       return image;
     },
   },
-  // ImagePost: {
-  //   id: async (parent, args, context, info) => {},
-  //   url: async (parent, args, context, info) => {},
-  //   posterName: async (parent, args, context, info) => {},
-  //   description: async (parent, args, context, info) => {},
-  //   userPosted: async (parent, args, context, info) => {},
-  //   binned: async (parent, args, context, info) => {},
-  // },
 };
