@@ -3,12 +3,6 @@ import { useMutation } from "@apollo/client";
 import { uploadImage } from "../gql/mutations";
 import { useState } from "react";
 
-/*
-Should render a form that has fields for:
-Image URL (we only allow image urls that are already on the internet)
-Description
-Poster name (this should in theory be the same all the time, but user identification is out of the scope of this lab)
-*/
 const NewPost = () => {
   const [formData, setFormData] = useState({
     url: "",

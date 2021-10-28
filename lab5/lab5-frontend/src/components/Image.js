@@ -9,8 +9,10 @@ import { ImagesContext } from "../App";
 
 const Image = (props) => {
   const { image, allowBin, allowDelete } = props;
-  const [binned, setBinned] = useState(image.binned);
+
   const [images, setImages] = useContext(ImagesContext);
+
+  const [binned, setBinned] = useState(image.binned);
   const [updateError, setUpdateError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
 
@@ -27,6 +29,7 @@ const Image = (props) => {
       setUpdateError(true);
     },
   });
+
   const [deleteImage] = useMutation(deleteImageMutation, {
     onCompleted: (image) => {
       setImages(images.filter((img) => img.id !== image.deleteImage.id));

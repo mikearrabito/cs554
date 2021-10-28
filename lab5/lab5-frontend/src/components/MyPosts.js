@@ -6,21 +6,12 @@ import { userPostedImages } from "../gql/queries";
 import { useQuery } from "@apollo/client";
 import { ImagesContext } from "../App";
 
-/*
-Should display a list of image posts that the user has posted.
-This page should have similar functionality as the / page.
-However, the user should be able to delete their posts from this page
-Users can also only upload new posts from here as well.
-*/
 const MyPosts = () => {
   const [images, setImages] = useContext(ImagesContext);
 
   const { loading, error } = useQuery(userPostedImages, {
     onCompleted: (data) => {
       setImages(data.userPostedImages);
-    },
-    onError: (e) => {
-      // display error fetching images
     },
     fetchPolicy: "network-only",
   });
