@@ -25,7 +25,7 @@ module.exports = {
       for (const image of data) {
         img = {};
         img.id = image.id;
-        img.url = image.urls.regular;
+        img.url = image.urls.small;
         img.posterName = image.user.username;
         img.description = image.description;
         img.userPosted = false;
