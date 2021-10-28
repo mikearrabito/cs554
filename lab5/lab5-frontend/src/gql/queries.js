@@ -9,6 +9,7 @@ export const unsplashImages = gql`
       description
       userPosted
       binned
+      numBinned
     }
   }
 `;
@@ -22,6 +23,7 @@ export const binnedImages = gql`
       description
       userPosted
       binned
+      numBinned
     }
   }
 `;
@@ -35,6 +37,21 @@ export const userPostedImages = gql`
       description
       userPosted
       binned
+      numBinned
+    }
+  }
+`;
+
+export const topBinned = gql`
+  query topBinned {
+    getTopTenBinnedPosts {
+      id
+      url
+      posterName
+      description
+      userPosted
+      binned
+      numBinned
     }
   }
 `;

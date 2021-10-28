@@ -22,8 +22,8 @@ const MyBin = () => {
         "Loading images..."
       ) : error ? (
         <p>Error loading images</p>
-      ) : images.filter((img) => img.binned).length ? (
-        <ImageList images={images.filter((img) => img.binned)} allowBin />
+      ) : images.length ? (
+        <ImageList images={images} allowBin removeOnUnbin />
       ) : (
         <p>No Binned images!</p>
       )}

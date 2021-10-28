@@ -1,7 +1,7 @@
 import Image from "./Image";
 
 const ImageList = (props) => {
-  const { images, allowBin, allowDelete } = props;
+  const { images, allowBin, allowDelete, removeOnUnbin } = props;
 
   return (
     <ul style={{ listStyleType: "none", padding: "0px" }}>
@@ -17,7 +17,12 @@ const ImageList = (props) => {
               marginBottom: "18px",
             }}
           >
-            <Image image={img} allowBin={allowBin} allowDelete={allowDelete} />
+            <Image
+              image={img}
+              allowBin={allowBin}
+              allowDelete={allowDelete}
+              removeOnUnbin={removeOnUnbin}
+            />
           </li>
         );
       })}

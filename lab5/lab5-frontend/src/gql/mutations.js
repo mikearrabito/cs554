@@ -13,6 +13,7 @@ export const uploadImage = gql`
       description
       userPosted
       binned
+      numBinned
     }
   }
 `;
@@ -25,6 +26,7 @@ export const updateImage = gql`
     $description: String
     $userPosted: Boolean
     $binned: Boolean
+    $numBinned: Int
   ) {
     updateImage(
       id: $updateImageId
@@ -33,6 +35,7 @@ export const updateImage = gql`
       description: $description
       userPosted: $userPosted
       binned: $binned
+      numBinned: $numBinned
     ) {
       id
       url
@@ -40,6 +43,7 @@ export const updateImage = gql`
       description
       userPosted
       binned
+      numBinned
     }
   }
 `;
@@ -53,6 +57,7 @@ export const deleteImage = gql`
       description
       userPosted
       binned
+      numBinned
     }
   }
 `;

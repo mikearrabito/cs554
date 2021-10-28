@@ -9,6 +9,9 @@ const NavLinks = () => {
       <Link to="/my-bin" style={{ marginRight: "30px" }}>
         My Bin
       </Link>
+      <Link to="/popularity" style={{ marginRight: "30px" }}>
+        Top from My Bin
+      </Link>
       <Link to="/my-posts">My Posts</Link>
     </nav>
   );

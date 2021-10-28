@@ -20,6 +20,11 @@ const client = new ApolloClient({
               return newPics;
             },
           },
+          getTopTenBinnedPosts: {
+            merge: (old, newPics) => {
+              return newPics;
+            },
+          },
         },
       },
     },

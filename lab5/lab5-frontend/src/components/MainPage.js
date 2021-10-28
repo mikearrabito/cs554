@@ -15,6 +15,7 @@ const MainPage = () => {
     onError: () => {
       alert("Error fetching page of images, try again");
     },
+    fetchPolicy: "network-only",
   });
 
   useEffect(() => {

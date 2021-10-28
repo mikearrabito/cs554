@@ -5,6 +5,7 @@ import MainPage from "./components/MainPage";
 import MyBin from "./components/MyBin";
 import MyPosts from "./components/MyPosts";
 import NewPost from "./components/NewPost";
+import PopularImages from "./components/PopularImages";
 
 export const ImagesContext = createContext();
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/my-bin" exact component={MyBin} />
             <Route path="/my-posts" exact component={MyPosts} />
             <Route path="/new-post" exact component={NewPost} />
+            <Route path="/popularity" exact component={PopularImages} />
           </Switch>
         </Router>
       </div>

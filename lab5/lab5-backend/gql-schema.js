@@ -5,6 +5,7 @@ module.exports = gql`
     unsplashImages(pageNum: Int): [ImagePost]
     binnedImages: [ImagePost]
     userPostedImages: [ImagePost]
+    getTopTenBinnedPosts: [ImagePost]
   }
 
   type Mutation {
@@ -21,6 +22,7 @@ module.exports = gql`
       description: String
       userPosted: Boolean
       binned: Boolean
+      numBinned: Int
     ): ImagePost
 
     deleteImage(id: ID!): ImagePost
@@ -33,5 +35,6 @@ module.exports = gql`
     description: String
     userPosted: Boolean!
     binned: Boolean!
+    numBinned: Int!
   }
 `;

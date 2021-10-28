@@ -8,21 +8,33 @@ import { useContext } from "react";
 import { ImagesContext } from "../App";
 
 const Image = (props) => {
-  const { image, allowBin, allowDelete } = props;
+  const { image, allowBin, allowDelete, removeOnUnbin } = props;
 
   const [images, setImages] = useContext(ImagesContext);
 
   const [binned, setBinned] = useState(image.binned);
+  const [bins, setBins] = useState(image.numBinned);
+
   const [updateError, setUpdateError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
 
   const [updateImage] = useMutation(updateImageMutation, {
     onCompleted: (image) => {
       setBinned(image.updateImage.binned);
+      setBins(image.updateImage.numBinned);
       setImages(
-        images.map((img) => {
-          return img.id === image.updateImage.id ? image.updateImage : img;
-        })
+        images
+          .filter((i) => {
+            if (removeOnUnbin) {
+              // remove this item from imagecontext instead of just updating (for my bin and top my bin pages)
+              return i.id !== image.updateImage.id;
+            } else {
+              return true;
+            }
+          })
+          .map((img) => {
+            return img.id === image.updateImage.id ? image.updateImage : img;
+          })
       );
     },
     onError: () => {
@@ -55,10 +67,12 @@ const Image = (props) => {
         )}
         {`Posted by: ${image.posterName}`}
       </p>
+      <p>Bins: {bins}</p>
       {allowBin && (
         <>
           <button
             onClick={() => {
+              setDeleteError(false);
               setUpdateError(false);
               updateImage({
                 variables: {
@@ -68,6 +82,7 @@ const Image = (props) => {
                   posterName: image.posterName,
                   description: image.description,
                   userPosted: image.userPosted,
+                  numBinned: binned ? bins - 1 : bins + 1,
                 },
               });
             }}
@@ -75,12 +90,14 @@ const Image = (props) => {
             {binned === false ? "Add to Bin" : "Remove from bin"}
           </button>
           <br />
+          <br />
         </>
       )}
       {allowDelete && (
         <button
           onClick={() => {
             setDeleteError(false);
+            setUpdateError(false);
             deleteImage({ variables: { deleteImageId: image.id } });
           }}
         >
