@@ -72,6 +72,7 @@ const NewPost = () => {
         <input
           type="text"
           name="url"
+          id="url"
           value={formData.url}
           onChange={(e) => setFormData({ ...formData, url: e.target.value })}
         />
@@ -79,6 +80,7 @@ const NewPost = () => {
         <input
           type="text"
           name="description"
+          id="description"
           value={formData.description}
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
@@ -88,6 +90,7 @@ const NewPost = () => {
         <input
           type="text"
           name="posterName"
+          id="posterName"
           value={formData.posterName}
           onChange={(e) =>
             setFormData({ ...formData, posterName: e.target.value })
@@ -96,9 +99,10 @@ const NewPost = () => {
         <br />
         <button type="submit">Submit</button>
         {errors.length > 0 && (
-          <div id="form-errors" style={{ color: "red" }}>
-            <ul>
-              Errors with your entry
+          <div id="form-errors" style={{ color: "#ee0000" }}>
+            <br />
+            Errors with your entry:
+            <ul style={{ padding: "0px", listStyleType: "none" }}>
               {errors.map((err) => {
                 return <li key={err}>{err}</li>;
               })}
@@ -108,7 +112,7 @@ const NewPost = () => {
       </form>
       {success && <p>Successfully uploaded image!</p>}
       {uploadError && (
-        <p style={{ color: "red" }}>
+        <p style={{ color: "#ee0000" }}>
           Error uploading image!
           <br />
           Try again.

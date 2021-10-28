@@ -104,8 +104,8 @@ const Image = (props) => {
           Delete
         </button>
       )}
-      {deleteError && <p style={{ color: "red" }}>Error deleting image!</p>}
-      {updateError && <p style={{ color: "red" }}>Error updating image!</p>}
+      {deleteError && <p style={{ color: "#ee0000" }}>Error deleting image!</p>}
+      {updateError && <p style={{ color: "#ee0000" }}>Error updating image!</p>}
     </div>
   );
 };
