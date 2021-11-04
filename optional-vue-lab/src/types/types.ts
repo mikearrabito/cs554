@@ -10,3 +10,11 @@ export interface MarvelInfo {
     items: Array<{ resourceURI: string; name: string; type: string }>;
   };
 }
+
+export interface MarvelApiResponse {
+  count: number;
+  limit: number;
+  offset: number;
+  total: number;
+  results: Array<MarvelInfo>;
+}

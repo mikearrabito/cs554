@@ -1,5 +1,6 @@
 import md5 from "md5";
 import axios from "axios";
+import { MarvelApiResponse } from "../types/types";
 
 const publickey = process.env.VUE_APP_MARVEL_API_KEY;
 const privatekey = process.env.VUE_APP_MARVEL_PRIVATE_API_KEY || "";
@@ -9,7 +10,7 @@ export const getMarvelData = async (
   section: "characters" | "comics" | "series",
   num: number,
   isPage: boolean
-) => {
+): Promise<MarvelApiResponse> => {
   // num is id for single or pageNum if isPage is set to true
   // isPage: if false return single item with id num, else return page num
 
@@ -46,7 +47,7 @@ export const searchMarvelData = async (
   section: "characters" | "comics" | "series",
   searchTerm: string,
   page: number
-) => {
+): Promise<MarvelApiResponse> => {
   if (searchTerm.trim() === "") {
     throw new Error("Search term must not only be whitespace");
   }

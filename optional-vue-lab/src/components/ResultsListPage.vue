@@ -9,9 +9,9 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
-import { MarvelInfo } from "../types/types";
+import { getMarvelData } from "../api";
 
-const handlePageChange = (routeParams: Object) => {
+const handlePageChange = async (routeParams: Object) => {
   // This function handles initial page mount and page update when section or page num changes
   const { section, pageNum }: { section?: string; pageNum?: string } =
     routeParams;
@@ -25,39 +25,18 @@ const handlePageChange = (routeParams: Object) => {
 
   if (section === "characters" || section === "comics" || section == "series") {
     if (!isNaN(page) && page >= 0) {
-      fetchData(section, page);
+      // TODO: handle 404 (empty array in response or an error)
+      const response = await getMarvelData(section, page, true);
+      const data = response.results;
+      console.log(data);
     }
   }
-};
-
-const fetchData = (section: string, page: number): Array<MarvelInfo> => {
-  // handles data fetch calls from mounted and updated
-
-  console.log(section, page);
-  // TODO: finish logic for fetching data
-  return [
-    {
-      id: 10,
-      description: "abc",
-      name: "abc",
-      title: "abc",
-      thumbnail: { path: "abc", extension: "abc" },
-      comics: { items: [] },
-      series: { items: [] },
-      stories: {
-        items: [],
-      },
-    },
-  ];
 };
 
 export default defineComponent({
   name: "ResultsListPage",
   data() {
     return {};
-  },
-  async created() {
-    //
   },
   mounted() {
     handlePageChange(this.$route.params);
