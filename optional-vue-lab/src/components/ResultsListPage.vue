@@ -7,8 +7,19 @@
   </h1>
   <div v-if="loading === true">Loading...</div>
   <div v-if="loading !== true && marvelData !== null">
-    <div v-if="page !== null">
-      <p>Page: {{ page }}</p>
+    <div
+      id="page-selection-container"
+      v-if="totalPages !== null && page !== null"
+    >
+      <v-pagination
+        v-model="page"
+        :pages="totalPages"
+        :range-size="1"
+        active-color="#DCEDFF"
+        @update:modelValue="updatePage"
+        hideFirstButton
+        hideLastButton
+      />
     </div>
     <ul v-for="item in marvelData" :key="item.id">
       <p v-if="item.name">{{ item.name }}</p>
@@ -21,6 +32,8 @@
 import { MarvelApiResponse, MarvelInfo } from "@/types/types";
 import { defineComponent } from "@vue/runtime-core";
 import { getMarvelData } from "../api";
+import VPagination from "@hennge/vue3-pagination";
+import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
 const getPageData = async (
   routeParams: Object
@@ -51,15 +64,27 @@ const getPageData = async (
 
 export default defineComponent({
   name: "ResultsListPage",
+  components: {
+    VPagination,
+  },
+  methods: {
+    updatePage(selectedPage: number) {
+      this.page = selectedPage;
+    },
+  },
   data() {
     const data: {
       marvelData: Array<MarvelInfo> | null;
       loading: boolean;
       page: number | null;
+      section: "characters" | "comics" | "series" | null;
+      totalPages: number | null;
     } = {
       marvelData: null,
       loading: false,
       page: null,
+      section: null,
+      totalPages: null,
     };
     return data;
   },
@@ -78,6 +103,7 @@ export default defineComponent({
           document.title = `Marvel ${
             section[0].toUpperCase() + section.slice(1)
           }`;
+          this.section = section;
           this.loading = true;
           let data: MarvelApiResponse | null = null;
           try {
@@ -91,6 +117,9 @@ export default defineComponent({
             this.marvelData = data.results;
             this.loading = false;
             this.page = data.page;
+            const totalData = data.total;
+            const perPage = data.limit;
+            this.totalPages = Math.ceil(totalData / perPage);
           } else {
             // redirect to 404, no data found from api, or error during request
             this.$router.replace("/not-found");
@@ -125,12 +154,20 @@ export default defineComponent({
             this.marvelData = data.results;
             this.loading = false;
             this.page = data.page;
+            const totalData = data.total;
+            const perPage = data.limit;
+            this.totalPages = Math.ceil(totalData / perPage);
           } else {
             this.$router.replace("/not-found");
           }
         }
       },
       immediate: true,
+    },
+    page: {
+      handler: function (pageNum: number) {
+        this.$router.push(`/${this.section}/page/${pageNum - 1}`);
+      },
     },
   },
 });
@@ -140,5 +177,10 @@ export default defineComponent({
 ul {
   list-style-type: none;
   padding: 0px;
+}
+#page-selection-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
