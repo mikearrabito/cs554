@@ -6,6 +6,7 @@ import {
 import { useState } from "react";
 import { useContext } from "react";
 import { ImagesContext } from "../App";
+import notFound from "../images/notFound.png";
 
 const Image = (props) => {
   const { image, allowBin, allowDelete, removeOnUnbin } = props;
@@ -17,6 +18,7 @@ const Image = (props) => {
 
   const [updateError, setUpdateError] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
+  const [imageLoadError, setImageLoadError] = useState(true);
 
   const [updateImage] = useMutation(updateImageMutation, {
     onCompleted: (image) => {
@@ -57,6 +59,12 @@ const Image = (props) => {
         src={image.url}
         alt={image.description ?? `Post by ${image.posterName}`}
         style={{ marginBottom: "4px", maxWidth: "80%" }}
+        onError={(e) => {
+          if (imageLoadError) {
+            setImageLoadError(false); // used to prevent infinite loop if theres an error loading our notFound image as well
+            e.target.src = notFound;
+          }
+        }}
       />
       <p style={{ margin: "4px" }}>
         {image.description && (
