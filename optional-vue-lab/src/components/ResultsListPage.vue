@@ -90,8 +90,7 @@ export default defineComponent({
           if (data !== null) {
             this.marvelData = data.results;
             this.loading = false;
-            this.page = data.page + 1;
-            //
+            this.page = data.page;
           } else {
             // redirect to 404, no data found from api, or error during request
             this.$router.replace("/not-found");
@@ -125,10 +124,8 @@ export default defineComponent({
           if (data !== null) {
             this.marvelData = data.results;
             this.loading = false;
-            this.page = data.page + 1;
-            //
+            this.page = data.page;
           } else {
-            // redirect to 404
             this.$router.replace("/not-found");
           }
         }

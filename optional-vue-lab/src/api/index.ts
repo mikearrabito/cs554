@@ -27,7 +27,7 @@ export const getMarvelData = async (
         hash,
       },
     }); // handle 404 at the calling component
-    return response.data.data;
+    return { ...response.data.data, page: null };
   } else {
     // page based on second param passed
     const response = await axios.get(url, {
@@ -39,7 +39,7 @@ export const getMarvelData = async (
         offset: 20 * num, // 20 per page, multiply 20 by pagenum to get offset (20*0 = 0 for page 0, then offset of 20 for page 1, etc)
       },
     });
-    return { ...response.data.data, page: num };
+    return { ...response.data.data, page: num + 1 };
   }
 };
 
@@ -68,5 +68,5 @@ export const searchMarvelData = async (
       offset: 20 * page,
     },
   });
-  return response.data.data;
+  return { ...response.data.data, page: null };
 };
