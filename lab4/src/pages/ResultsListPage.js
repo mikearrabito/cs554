@@ -34,8 +34,8 @@ const ResultsListPage = (props) => {
 
         const data = await getMarvelData(section, pageNum, true);
 
-        const total = parseInt(data.total);
-        const perPage = parseInt(data.limit);
+        const total = data.total;
+        const perPage = data.limit;
         setTotalPages(Math.ceil(total / perPage)); // ceiling of total/perPage, since last page can have <= perPage results
 
         if (data.results.length === 0) {
