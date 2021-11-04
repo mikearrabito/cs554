@@ -39,7 +39,7 @@ export const getMarvelData = async (
         offset: 20 * num, // 20 per page, multiply 20 by pagenum to get offset (20*0 = 0 for page 0, then offset of 20 for page 1, etc)
       },
     });
-    return response.data.data;
+    return { ...response.data.data, page: num };
   }
 };
 

@@ -7,6 +7,9 @@
   </h1>
   <div v-if="loading === true">Loading...</div>
   <div v-if="loading !== true && marvelData !== null">
+    <div v-if="page !== null">
+      <p>Page: {{ page }}</p>
+    </div>
     <ul v-for="item in marvelData" :key="item.id">
       <p v-if="item.name">{{ item.name }}</p>
       <p v-else>{{ item.title }}</p>
@@ -15,15 +18,15 @@
 </template>
 
 <script lang="ts">
-import { MarvelInfo } from "@/types/types";
+import { MarvelApiResponse, MarvelInfo } from "@/types/types";
 import { defineComponent } from "@vue/runtime-core";
 import { getMarvelData } from "../api";
 
 const getPageData = async (
   routeParams: Object
-): Promise<MarvelInfo[] | null> => {
+): Promise<MarvelApiResponse | null> => {
   // This function handles initial page mount and when either section or page number are changed
-  // returns array of data to display in list, or null if no data found
+  // returns api response if there is data, else returns null if no data found
   const { section, pageNum }: { section?: string; pageNum?: string } =
     routeParams;
 
@@ -39,7 +42,7 @@ const getPageData = async (
       const response = await getMarvelData(section, page, true);
       const data = response.results;
       if (data.length) {
-        return data;
+        return response;
       }
     }
   }
@@ -49,9 +52,14 @@ const getPageData = async (
 export default defineComponent({
   name: "ResultsListPage",
   data() {
-    const data: { marvelData: Array<MarvelInfo> | null; loading: boolean } = {
+    const data: {
+      marvelData: Array<MarvelInfo> | null;
+      loading: boolean;
+      page: number | null;
+    } = {
       marvelData: null,
       loading: false,
+      page: null,
     };
     return data;
   },
@@ -65,21 +73,24 @@ export default defineComponent({
             section !== "series"
           ) {
             this.$router.replace("/not-found");
+            return;
           }
           document.title = `Marvel ${
             section[0].toUpperCase() + section.slice(1)
           }`;
           this.loading = true;
-          let data: Array<MarvelInfo> | null = null;
+          let data: MarvelApiResponse | null = null;
           try {
             data = await getPageData(this.$route.params);
           } catch (e) {
             this.loading = false;
             this.$router.replace("/not-found");
+            return;
           }
           if (data !== null) {
-            this.marvelData = data;
+            this.marvelData = data.results;
             this.loading = false;
+            this.page = data.page + 1;
             //
           } else {
             // redirect to 404, no data found from api, or error during request
@@ -100,18 +111,21 @@ export default defineComponent({
           }
           if (isNaN(page) || page < 0) {
             this.$router.replace("/not-found");
+            return;
           }
           this.loading = true;
-          let data: Array<MarvelInfo> | null = null;
+          let data: MarvelApiResponse | null = null;
           try {
             data = await getPageData(this.$route.params);
           } catch (e) {
             this.loading = false;
             this.$router.replace("/not-found");
+            return;
           }
           if (data !== null) {
-            this.marvelData = data;
+            this.marvelData = data.results;
             this.loading = false;
+            this.page = data.page + 1;
             //
           } else {
             // redirect to 404

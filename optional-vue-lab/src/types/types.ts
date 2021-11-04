@@ -16,5 +16,6 @@ export interface MarvelApiResponse {
   limit: number;
   offset: number;
   total: number;
+  page: number; // appended in api/index.ts, not originally sent with response, but adding to make it easier to reference the page
   results: Array<MarvelInfo>;
 }
