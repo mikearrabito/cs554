@@ -5,14 +5,25 @@
       $route.params.section[0].toUpperCase() + $route.params.section.slice(1)
     }}
   </h1>
+  <div v-if="loading === true">Loading...</div>
+  <div v-if="loading !== true && marvelData !== null">
+    <ul v-for="item in marvelData" :key="item.id">
+      <p v-if="item.name">{{ item.name }}</p>
+      <p v-else>{{ item.title }}</p>
+    </ul>
+  </div>
 </template>
 
 <script lang="ts">
+import { MarvelInfo } from "@/types/types";
 import { defineComponent } from "@vue/runtime-core";
 import { getMarvelData } from "../api";
 
-const handlePageChange = async (routeParams: Object) => {
-  // This function handles initial page mount and page update when section or page num changes
+const getPageData = async (
+  routeParams: Object
+): Promise<MarvelInfo[] | null> => {
+  // This function handles initial page mount and when either section or page number are changed
+  // returns array of data to display in list, or null if no data found
   const { section, pageNum }: { section?: string; pageNum?: string } =
     routeParams;
 
@@ -25,28 +36,28 @@ const handlePageChange = async (routeParams: Object) => {
 
   if (section === "characters" || section === "comics" || section == "series") {
     if (!isNaN(page) && page >= 0) {
-      // TODO: handle 404 (empty array in response or an error)
       const response = await getMarvelData(section, page, true);
       const data = response.results;
-      console.log(data);
+      if (data.length) {
+        return data;
+      }
     }
   }
+  return null;
 };
 
 export default defineComponent({
   name: "ResultsListPage",
   data() {
-    return {};
-  },
-  mounted() {
-    handlePageChange(this.$route.params);
-  },
-  updated() {
-    handlePageChange(this.$route.params);
+    const data: { marvelData: Array<MarvelInfo> | null; loading: boolean } = {
+      marvelData: null,
+      loading: false,
+    };
+    return data;
   },
   watch: {
     "$route.params.section": {
-      handler: function (section: string) {
+      handler: async function (section: string) {
         if (section) {
           if (
             section !== "characters" &&
@@ -58,12 +69,28 @@ export default defineComponent({
           document.title = `Marvel ${
             section[0].toUpperCase() + section.slice(1)
           }`;
+          this.loading = true;
+          let data: Array<MarvelInfo> | null = null;
+          try {
+            data = await getPageData(this.$route.params);
+          } catch (e) {
+            this.loading = false;
+            this.$router.replace("/not-found");
+          }
+          if (data !== null) {
+            this.marvelData = data;
+            this.loading = false;
+            //
+          } else {
+            // redirect to 404, no data found from api, or error during request
+            this.$router.replace("/not-found");
+          }
         }
       },
       immediate: true,
     },
     "$route.params.pageNum": {
-      handler: function (pageNum: string) {
+      handler: async function (pageNum: string) {
         if (pageNum) {
           let page: number;
           if (pageNum) {
@@ -74,6 +101,22 @@ export default defineComponent({
           if (isNaN(page) || page < 0) {
             this.$router.replace("/not-found");
           }
+          this.loading = true;
+          let data: Array<MarvelInfo> | null = null;
+          try {
+            data = await getPageData(this.$route.params);
+          } catch (e) {
+            this.loading = false;
+            this.$router.replace("/not-found");
+          }
+          if (data !== null) {
+            this.marvelData = data;
+            this.loading = false;
+            //
+          } else {
+            // redirect to 404
+            this.$router.replace("/not-found");
+          }
         }
       },
       immediate: true,
@@ -81,3 +124,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+ul {
+  list-style-type: none;
+  padding: 0px;
+}
+</style>
