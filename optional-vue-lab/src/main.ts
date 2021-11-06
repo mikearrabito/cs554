@@ -11,7 +11,7 @@ const router = createRouter({
   routes: [
     { path: "/", component: MainPage },
     { path: "/:section/page/:pageNum", component: ResultsListPage },
-    { path: "/:section/:id", component: Details },
+    { path: "/:section/:id", component: Details, name: "details" },
     { path: "/not-found", component: NotFound },
     { path: "/:pathMatch(.*)*", component: NotFound },
   ],

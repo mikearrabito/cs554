@@ -1,5 +1,5 @@
 <template>
-  <h1>
+  <h1 v-if="section">
     Marvel
     {{
       $route.params.section[0].toUpperCase() + $route.params.section.slice(1)
@@ -22,8 +22,16 @@
       />
     </div>
     <ul v-for="item in marvelData" :key="item.id">
-      <p v-if="item.name">{{ item.name }}</p>
-      <p v-else>{{ item.title }}</p>
+      <router-link
+        :to="{
+          name: 'details',
+          params: { section: $route.params.section, id: item.id },
+        }"
+        exact
+      >
+        <p v-if="item.name">{{ item.name }}</p>
+        <p v-else>{{ item.title }}</p>
+      </router-link>
     </ul>
   </div>
 </template>
@@ -88,6 +96,38 @@ export default defineComponent({
     };
     return data;
   },
+  async created() {
+    this.loading = true;
+    let { section } = this.$route.params;
+    if (
+      section !== "characters" &&
+      section !== "comics" &&
+      section !== "series"
+    ) {
+      this.$router.replace("/not-found");
+    } else {
+      this.section = section;
+      document.title = `Marvel ${section[0].toUpperCase() + section.slice(1)}`;
+    }
+    let data: MarvelApiResponse | null = null;
+    try {
+      data = await getPageData(this.$route.params);
+    } catch (e) {
+      this.loading = false;
+      this.$router.replace("/not-found");
+      return;
+    }
+    if (data !== null) {
+      this.marvelData = data.results;
+      this.loading = false;
+      this.page = data.page;
+      const totalData = data.total;
+      const perPage = data.limit;
+      this.totalPages = Math.ceil(totalData / perPage);
+    } else {
+      this.$router.replace("/not-found");
+    }
+  },
   watch: {
     "$route.params.section": {
       handler: async function (section: string) {
@@ -126,7 +166,7 @@ export default defineComponent({
           }
         }
       },
-      immediate: true,
+      immediate: false,
     },
     "$route.params.pageNum": {
       handler: async function (pageNum: string) {
@@ -162,7 +202,7 @@ export default defineComponent({
           }
         }
       },
-      immediate: true,
+      immediate: false,
     },
     page: {
       handler: function (pageNum: number) {

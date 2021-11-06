@@ -43,6 +43,7 @@ export const getMarvelData = async (
   }
 };
 
+// from lab 4 React version, unused here
 export const searchMarvelData = async (
   section: "characters" | "comics" | "series",
   searchTerm: string,
