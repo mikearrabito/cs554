@@ -27,7 +27,6 @@
           name: 'details',
           params: { section: $route.params.section, id: item.id },
         }"
-        exact
       >
         <p v-if="item.name">{{ item.name }}</p>
         <p v-else>{{ item.title }}</p>
@@ -213,7 +212,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 ul {
   list-style-type: none;
   padding: 0px;
@@ -222,5 +221,11 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.Control {
+  display: none !important;
+}
+.Control-active {
+  display: block !important;
 }
 </style>

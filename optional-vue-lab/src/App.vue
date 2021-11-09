@@ -1,9 +1,9 @@
 <template>
   <nav>
-    <router-link to="/" exact>Main Page</router-link>
-    <router-link to="/characters/page/0" exact>Characters</router-link>
-    <router-link to="/comics/page/0" exact>Comics</router-link>
-    <router-link to="/series/page/0" exact>Series</router-link>
+    <router-link to="/">Main Page</router-link>
+    <router-link to="/characters/page/0">Characters</router-link>
+    <router-link to="/comics/page/0">Comics</router-link>
+    <router-link to="/series/page/0">Series</router-link>
   </nav>
   <router-view />
 </template>

@@ -8,7 +8,18 @@
       <h2>Characters</h2>
       <ul class="item-list">
         <li v-for="character in characters" :key="character.resourceURI">
-          {{ character.name }}
+          <router-link
+            :to="{
+              name: 'details',
+              params: {
+                section: 'characters',
+                id: character.resourceURI.split('/')[
+                  character.resourceURI.split('/').length - 1
+                ],
+              },
+            }"
+            >{{ character.name }}</router-link
+          >
         </li>
       </ul>
     </div>
@@ -16,7 +27,18 @@
       <h2>Comics</h2>
       <ul class="item-list">
         <li v-for="comic in comics" :key="comic.resourceURI">
-          {{ comic.name }}
+          <router-link
+            :to="{
+              name: 'details',
+              params: {
+                section: 'comics',
+                id: comic.resourceURI.split('/')[
+                  comic.resourceURI.split('/').length - 1
+                ],
+              },
+            }"
+            >{{ comic.name }}</router-link
+          >
         </li>
       </ul>
     </div>
@@ -24,7 +46,18 @@
       <h2>Series</h2>
       <ul class="item-list">
         <li v-for="ser in series" :key="ser.resourceURI">
-          {{ ser.name }}
+          <router-link
+            :to="{
+              name: 'details',
+              params: {
+                section: 'series',
+                id: ser.resourceURI.split('/')[
+                  ser.resourceURI.split('/').length - 1
+                ],
+              },
+            }"
+            >{{ ser.name }}</router-link
+          >
         </li>
       </ul>
     </div>
@@ -96,6 +129,7 @@ export default defineComponent({
       series: Array<{ resourceURI: string; name: string }> | undefined;
       stories: Array<{ resourceURI: string; name: string }> | null;
       creators: Array<{ name: string; role: string }> | undefined;
+      leaving: boolean;
     } = {
       loading: false,
       name: undefined,
@@ -107,6 +141,7 @@ export default defineComponent({
       series: undefined,
       stories: null,
       creators: undefined,
+      leaving: false,
     };
     return data;
   },
@@ -120,74 +155,166 @@ export default defineComponent({
       this.$router.replace("/not-found");
       return;
     }
-    if (data !== null) {
-      this.loading = false;
-      this.name = data.name ?? data.title;
-      this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
-      if (data.description) {
-        // remove html tags
-        this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
-      }
-      if (data.prices?.length) {
-        for (const price of data.prices) {
-          if (price.type === "printPrice") {
-            this.price = price.price;
-            break;
-          }
+    if (data === null) {
+      this.$router.replace("/not-found");
+      return;
+    }
+    this.loading = false;
+    this.name = data.name ?? data.title;
+    this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
+    if (data.description) {
+      this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+    if (data.prices?.length) {
+      for (const price of data.prices) {
+        if (price.type === "printPrice") {
+          this.price = price.price;
+          break;
         }
       }
-      if (data.creators?.items?.length) {
-        this.creators = data.creators.items;
-      }
-      if (data.stories?.items?.length) {
-        this.stories = data.stories.items;
-      }
-      if (data.series?.items?.length) {
-        this.series = data.series.items;
-      }
-      if (data.comics?.items?.length) {
-        this.comics = data.comics.items;
-      }
-      if (data.characters?.items?.length) {
-        this.characters = data.characters.items;
-      }
-    } else {
-      // redirect to 404, no data found from api, or error during request
-      this.$router.replace("/not-found");
     }
+    if (data.creators?.items?.length) {
+      this.creators = data.creators.items;
+    }
+    if (data.stories?.items?.length) {
+      this.stories = data.stories.items;
+    }
+    if (data.series?.items?.length) {
+      this.series = data.series.items;
+    }
+    if (data.comics?.items?.length) {
+      this.comics = data.comics.items;
+    }
+    if (data.characters?.items?.length) {
+      this.characters = data.characters.items;
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (
+      /(\/((characters)|(series)|(comics))\/page\/[\d]+)|(\/)/gi.test(to.path)
+    ) {
+      // matches /section/page/pageNum or /
+      this.leaving = true; // set a flag so our watch function wont trigger and send to 404
+    }
+    next();
   },
   watch: {
     "$route.params.section": {
       handler: async function () {
-        // this.loading = true;
-        // let data: MarvelInfo | null = null;
-        // try {
-        //   data = await getData(this.$route.params);
-        // } catch (e) {
-        //   this.$router.replace("/not-found");
-        // } finally {
-        //   this.loading = false;
-        // }
-        // if (data === null) {
-        //   this.$router.replace("/not-found");
-        // }
+        if (this.leaving) {
+          return;
+        }
+        this.loading = true;
+        let data: MarvelInfo | null = null;
+        try {
+          data = await getData(this.$route.params);
+        } catch (e) {
+          this.$router.replace("/not-found");
+        } finally {
+          this.loading = false;
+        }
+        if (data === null) {
+          this.$router.replace("/not-found");
+          return;
+        }
+        this.loading = false;
+        this.loading = false;
+        this.name = undefined;
+        this.image = null;
+        this.description = null;
+        this.price = null;
+        this.characters = undefined;
+        this.comics = undefined;
+        this.series = undefined;
+        this.stories = null;
+        this.creators = undefined;
+        this.name = data.name ?? data.title;
+        this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
+        if (data.description) {
+          this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+        }
+        if (data.prices?.length) {
+          for (const price of data.prices) {
+            if (price.type === "printPrice") {
+              this.price = price.price;
+              break;
+            }
+          }
+        }
+        if (data.creators?.items?.length) {
+          this.creators = data.creators.items;
+        }
+        if (data.stories?.items?.length) {
+          this.stories = data.stories.items;
+        }
+        if (data.series?.items?.length) {
+          this.series = data.series.items;
+        }
+        if (data.comics?.items?.length) {
+          this.comics = data.comics.items;
+        }
+        if (data.characters?.items?.length) {
+          this.characters = data.characters.items;
+        }
       },
       immediate: false,
     },
     "$route.params.id": {
       handler: async function () {
-        // this.loading = true;
-        // let data: MarvelInfo | null = null;
-        // try {
-        //   data = await getData(this.$route.params);
-        // } catch (e) {
-        //   this.$router.replace("/not-found");
-        // } finally {
-        //   this.loading = false;
-        // }
-        // if (data === null) {
-        //   this.$router.replace("/not-found");
-        // }
+        if (this.leaving) {
+          return;
+        }
+        this.loading = true;
+        let data: MarvelInfo | null = null;
+        try {
+          data = await getData(this.$route.params);
+        } catch (e) {
+          this.$router.replace("/not-found");
+        } finally {
+          this.loading = false;
+        }
+        if (data === null) {
+          this.$router.replace("/not-found");
+          return;
+        }
+        this.loading = false;
+        this.name = undefined;
+        this.image = null;
+        this.description = null;
+        this.price = null;
+        this.characters = undefined;
+        this.comics = undefined;
+        this.series = undefined;
+        this.stories = null;
+        this.creators = undefined;
+        this.name = data.name ?? data.title;
+        this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
+        if (data.description) {
+          this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+        }
+        if (data.prices?.length) {
+          for (const price of data.prices) {
+            if (price.type === "printPrice") {
+              this.price = price.price;
+              break;
+            }
+          }
+        }
+        if (data.creators?.items?.length) {
+          this.creators = data.creators.items;
+        }
+        if (data.stories?.items?.length) {
+          this.stories = data.stories.items;
+        }
+        if (data.series?.items?.length) {
+          this.series = data.series.items;
+        }
+        if (data.comics?.items?.length) {
+          this.comics = data.comics.items;
+        }
+        if (data.characters?.items?.length) {
+          this.characters = data.characters.items;
+        }
       },
       immediate: false,
     },
