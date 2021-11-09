@@ -16,7 +16,6 @@
         :pages="totalPages"
         :range-size="1"
         active-color="#DCEDFF"
-        @update:modelValue="updatePage"
         hideFirstButton
         hideLastButton
       />
@@ -75,9 +74,62 @@ export default defineComponent({
     VPagination,
   },
   methods: {
-    updatePage(selectedPage: number) {
-      this.page = selectedPage;
+    async updatePage() {
+      if (this.leaving) {
+        return;
+      }
+      let { section, pageNum } = this.$route.params;
+      if (
+        section !== "characters" &&
+        section !== "comics" &&
+        section !== "series"
+      ) {
+        this.$router.replace("/not-found");
+        return;
+      }
+
+      let page: number;
+      if (typeof pageNum === "string") {
+        page = parseInt(pageNum);
+      } else {
+        page = -1;
+      }
+
+      if (isNaN(page) || page < 0) {
+        this.$router.replace("/not-found");
+        return;
+      }
+
+      document.title = `Marvel ${section[0].toUpperCase() + section.slice(1)}`;
+      this.section = section;
+      this.loading = true;
+      let data: MarvelApiResponse | null = null;
+      try {
+        data = await getPageData(this.$route.params);
+      } catch (e) {
+        this.loading = false;
+        this.$router.replace("/not-found");
+        return;
+      }
+      if (data !== null) {
+        this.marvelData = data.results;
+        this.loading = false;
+        this.page = data.page;
+        const totalData = data.total;
+        const perPage = data.limit;
+        this.totalPages = Math.ceil(totalData / perPage);
+      } else {
+        // redirect to 404, no data found from api, or error during request
+        this.$router.replace("/not-found");
+      }
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    if (/(\/((characters)|(series)|(comics))\/[\d]+)|(\/)/gi.test(to.path)) {
+      // matches /section/id or /
+      this.leaving = true; // set a flag so our watch function wont trigger and send to 404
+    }
+    next();
   },
   data() {
     const data: {
@@ -86,120 +138,30 @@ export default defineComponent({
       page: number | null;
       section: "characters" | "comics" | "series" | null;
       totalPages: number | null;
+      leaving: boolean;
     } = {
       marvelData: null,
       loading: false,
       page: null,
       section: null,
       totalPages: null,
+      leaving: false,
     };
     return data;
   },
   async created() {
-    this.loading = true;
-    let { section } = this.$route.params;
-    if (
-      section !== "characters" &&
-      section !== "comics" &&
-      section !== "series"
-    ) {
-      this.$router.replace("/not-found");
-    } else {
-      this.section = section;
-      document.title = `Marvel ${section[0].toUpperCase() + section.slice(1)}`;
-    }
-    let data: MarvelApiResponse | null = null;
-    try {
-      data = await getPageData(this.$route.params);
-    } catch (e) {
-      this.loading = false;
-      this.$router.replace("/not-found");
-      return;
-    }
-    if (data !== null) {
-      this.marvelData = data.results;
-      this.loading = false;
-      this.page = data.page;
-      const totalData = data.total;
-      const perPage = data.limit;
-      this.totalPages = Math.ceil(totalData / perPage);
-    } else {
-      this.$router.replace("/not-found");
-    }
+    this.updatePage();
   },
   watch: {
     "$route.params.section": {
-      handler: async function (section: string) {
-        if (section) {
-          if (
-            section !== "characters" &&
-            section !== "comics" &&
-            section !== "series"
-          ) {
-            this.$router.replace("/not-found");
-            return;
-          }
-          document.title = `Marvel ${
-            section[0].toUpperCase() + section.slice(1)
-          }`;
-          this.section = section;
-          this.loading = true;
-          let data: MarvelApiResponse | null = null;
-          try {
-            data = await getPageData(this.$route.params);
-          } catch (e) {
-            this.loading = false;
-            this.$router.replace("/not-found");
-            return;
-          }
-          if (data !== null) {
-            this.marvelData = data.results;
-            this.loading = false;
-            this.page = data.page;
-            const totalData = data.total;
-            const perPage = data.limit;
-            this.totalPages = Math.ceil(totalData / perPage);
-          } else {
-            // redirect to 404, no data found from api, or error during request
-            this.$router.replace("/not-found");
-          }
-        }
+      handler: function () {
+        this.updatePage();
       },
       immediate: false,
     },
     "$route.params.pageNum": {
-      handler: async function (pageNum: string) {
-        if (pageNum) {
-          let page: number;
-          if (pageNum) {
-            page = parseInt(pageNum);
-          } else {
-            page = -1;
-          }
-          if (isNaN(page) || page < 0) {
-            this.$router.replace("/not-found");
-            return;
-          }
-          this.loading = true;
-          let data: MarvelApiResponse | null = null;
-          try {
-            data = await getPageData(this.$route.params);
-          } catch (e) {
-            this.loading = false;
-            this.$router.replace("/not-found");
-            return;
-          }
-          if (data !== null) {
-            this.marvelData = data.results;
-            this.loading = false;
-            this.page = data.page;
-            const totalData = data.total;
-            const perPage = data.limit;
-            this.totalPages = Math.ceil(totalData / perPage);
-          } else {
-            this.$router.replace("/not-found");
-          }
-        }
+      handler: function () {
+        this.updatePage();
       },
       immediate: false,
     },
@@ -227,5 +189,8 @@ ul {
 }
 .Control-active {
   display: block !important;
+}
+.Pagination li {
+  margin: 10px !important;
 }
 </style>

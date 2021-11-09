@@ -2,7 +2,7 @@
   <div id="details">
     <h1>{{ name }}</h1>
     <img v-if="image" :src="image" width="400" height="400" />
-    <p v-if="description">{{ description }}</p>
+    <p v-if="description" class="description-container">{{ description }}</p>
     <p v-if="price">Price: ${{ price }}</p>
     <div v-if="characters">
       <h2>Characters</h2>
@@ -145,49 +145,67 @@ export default defineComponent({
     };
     return data;
   },
-  async created() {
-    document.title = "Details";
-    this.loading = true;
-    let data: MarvelInfo | null = null;
-    try {
-      data = await getData(this.$route.params);
-    } catch (e) {
-      this.$router.replace("/not-found");
-      return;
-    }
-    if (data === null) {
-      this.$router.replace("/not-found");
-      return;
-    }
-    this.loading = false;
-    this.name = data.name ?? data.title;
-    this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
-    if (data.description) {
-      this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
-    }
-    if (data.prices?.length) {
-      for (const price of data.prices) {
-        if (price.type === "printPrice") {
-          this.price = price.price;
-          break;
+  methods: {
+    async updatePage() {
+      if (this.leaving) {
+        return;
+      }
+      this.loading = true;
+      let data: MarvelInfo | null = null;
+      try {
+        data = await getData(this.$route.params);
+      } catch (e) {
+        this.$router.replace("/not-found");
+      } finally {
+        this.loading = false;
+      }
+      if (data === null) {
+        this.$router.replace("/not-found");
+        return;
+      }
+      this.loading = false;
+      this.name = undefined;
+      this.image = null;
+      this.description = null;
+      this.price = null;
+      this.characters = undefined;
+      this.comics = undefined;
+      this.series = undefined;
+      this.stories = null;
+      this.creators = undefined;
+      this.name = data.name ?? data.title;
+      this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
+      if (data.description) {
+        this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+      }
+      if (data.prices?.length) {
+        for (const price of data.prices) {
+          if (price.type === "printPrice") {
+            this.price = price.price;
+            break;
+          }
         }
       }
-    }
-    if (data.creators?.items?.length) {
-      this.creators = data.creators.items;
-    }
-    if (data.stories?.items?.length) {
-      this.stories = data.stories.items;
-    }
-    if (data.series?.items?.length) {
-      this.series = data.series.items;
-    }
-    if (data.comics?.items?.length) {
-      this.comics = data.comics.items;
-    }
-    if (data.characters?.items?.length) {
-      this.characters = data.characters.items;
-    }
+      if (data.creators?.items?.length) {
+        this.creators = data.creators.items;
+      }
+      if (data.stories?.items?.length) {
+        this.stories = data.stories.items;
+      }
+      if (data.series?.items?.length) {
+        this.series = data.series.items;
+      }
+      if (data.comics?.items?.length) {
+        this.comics = data.comics.items;
+      }
+      if (data.characters?.items?.length) {
+        this.characters = data.characters.items;
+      }
+    },
+  },
+  created() {
+    document.title = "Details";
+    this.updatePage();
   },
   beforeRouteLeave(to, from, next) {
     if (
@@ -200,121 +218,14 @@ export default defineComponent({
   },
   watch: {
     "$route.params.section": {
-      handler: async function () {
-        if (this.leaving) {
-          return;
-        }
-        this.loading = true;
-        let data: MarvelInfo | null = null;
-        try {
-          data = await getData(this.$route.params);
-        } catch (e) {
-          this.$router.replace("/not-found");
-        } finally {
-          this.loading = false;
-        }
-        if (data === null) {
-          this.$router.replace("/not-found");
-          return;
-        }
-        this.loading = false;
-        this.loading = false;
-        this.name = undefined;
-        this.image = null;
-        this.description = null;
-        this.price = null;
-        this.characters = undefined;
-        this.comics = undefined;
-        this.series = undefined;
-        this.stories = null;
-        this.creators = undefined;
-        this.name = data.name ?? data.title;
-        this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
-        if (data.description) {
-          this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
-        }
-        if (data.prices?.length) {
-          for (const price of data.prices) {
-            if (price.type === "printPrice") {
-              this.price = price.price;
-              break;
-            }
-          }
-        }
-        if (data.creators?.items?.length) {
-          this.creators = data.creators.items;
-        }
-        if (data.stories?.items?.length) {
-          this.stories = data.stories.items;
-        }
-        if (data.series?.items?.length) {
-          this.series = data.series.items;
-        }
-        if (data.comics?.items?.length) {
-          this.comics = data.comics.items;
-        }
-        if (data.characters?.items?.length) {
-          this.characters = data.characters.items;
-        }
+      handler: function () {
+        this.updatePage();
       },
       immediate: false,
     },
     "$route.params.id": {
-      handler: async function () {
-        if (this.leaving) {
-          return;
-        }
-        this.loading = true;
-        let data: MarvelInfo | null = null;
-        try {
-          data = await getData(this.$route.params);
-        } catch (e) {
-          this.$router.replace("/not-found");
-        } finally {
-          this.loading = false;
-        }
-        if (data === null) {
-          this.$router.replace("/not-found");
-          return;
-        }
-        this.loading = false;
-        this.name = undefined;
-        this.image = null;
-        this.description = null;
-        this.price = null;
-        this.characters = undefined;
-        this.comics = undefined;
-        this.series = undefined;
-        this.stories = null;
-        this.creators = undefined;
-        this.name = data.name ?? data.title;
-        this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
-        if (data.description) {
-          this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
-        }
-        if (data.prices?.length) {
-          for (const price of data.prices) {
-            if (price.type === "printPrice") {
-              this.price = price.price;
-              break;
-            }
-          }
-        }
-        if (data.creators?.items?.length) {
-          this.creators = data.creators.items;
-        }
-        if (data.stories?.items?.length) {
-          this.stories = data.stories.items;
-        }
-        if (data.series?.items?.length) {
-          this.series = data.series.items;
-        }
-        if (data.comics?.items?.length) {
-          this.comics = data.comics.items;
-        }
-        if (data.characters?.items?.length) {
-          this.characters = data.characters.items;
-        }
+      handler: function () {
+        this.updatePage();
       },
       immediate: false,
     },
@@ -325,5 +236,10 @@ export default defineComponent({
 <style scoped>
 .item-list {
   padding: 0px;
+}
+.description-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
 }
 </style>
