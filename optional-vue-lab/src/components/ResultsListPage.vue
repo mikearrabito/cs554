@@ -20,16 +20,18 @@
         hideLastButton
       />
     </div>
-    <ul v-for="item in marvelData" :key="item.id">
-      <router-link
-        :to="{
-          name: 'details',
-          params: { section: $route.params.section, id: item.id },
-        }"
-      >
-        <p v-if="item.name">{{ item.name }}</p>
-        <p v-else>{{ item.title }}</p>
-      </router-link>
+    <ul>
+      <li v-for="item in marvelData" :key="item.id">
+        <router-link
+          :to="{
+            name: 'details',
+            params: { section: $route.params.section, id: item.id },
+          }"
+        >
+          <p v-if="item.name">{{ item.name }}</p>
+          <p v-else>{{ item.title }}</p>
+        </router-link>
+      </li>
     </ul>
   </div>
 </template>

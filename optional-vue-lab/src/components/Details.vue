@@ -1,7 +1,7 @@
 <template>
   <div id="details">
     <h1>{{ name }}</h1>
-    <img v-if="image" :src="image" width="400" height="400" />
+    <img v-if="image" :src="image" :alt="name" width="400" height="400" />
     <p v-if="description" class="description-container">{{ description }}</p>
     <p v-if="price">Price: ${{ price }}</p>
     <div v-if="characters">
@@ -164,20 +164,14 @@ export default defineComponent({
         return;
       }
       this.loading = false;
-      this.name = undefined;
-      this.image = null;
-      this.description = null;
-      this.price = null;
-      this.characters = undefined;
-      this.comics = undefined;
-      this.series = undefined;
-      this.stories = null;
-      this.creators = undefined;
       this.name = data.name ?? data.title;
       this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
-      if (data.description) {
+      if (data.description !== null) {
         this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+      } else {
+        this.description = null;
       }
+      this.price = null;
       if (data.prices?.length) {
         for (const price of data.prices) {
           if (price.type === "printPrice") {
@@ -188,18 +182,28 @@ export default defineComponent({
       }
       if (data.creators?.items?.length) {
         this.creators = data.creators.items;
+      } else {
+        this.creators = undefined;
       }
       if (data.stories?.items?.length) {
-        this.stories = data.stories.items;
+        this.stories = data.stories.items.filter((story) => story.name !== "");
+      } else {
+        this.stories = null;
       }
       if (data.series?.items?.length) {
         this.series = data.series.items;
+      } else {
+        this.series = undefined;
       }
       if (data.comics?.items?.length) {
         this.comics = data.comics.items;
+      } else {
+        this.comics = undefined;
       }
       if (data.characters?.items?.length) {
         this.characters = data.characters.items;
+      } else {
+        this.characters = undefined;
       }
     },
   },
