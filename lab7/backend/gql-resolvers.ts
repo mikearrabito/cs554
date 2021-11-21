@@ -25,10 +25,10 @@ module.exports = {
         // == null catches null and undefined
         page = 0;
       }
-      if (await redisClient.hExists("cached-pages", page)) {
-        const data = await redisClient.hGet("cached-pages", page);
-        return JSON.parse(data);
-      }
+      //   if (await redisClient.hExists("cached-pages", page)) {
+      //     const data = await redisClient.hGet("cached-pages", page);
+      //     return JSON.parse(data);
+      //   }
       let response;
       try {
         response = await axios.get(POKEMON_API, {
@@ -53,10 +53,10 @@ module.exports = {
     getPokemon: async (_: any, args: { id: number }) => {
       // return single pokemon with a given id, or null if not found
       const { id } = args;
-      if (await redisClient.hExists("cached-details", id)) {
-        const data = redisClient.hGet("cached-details", id);
-        return JSON.parse(data);
-      }
+      //   if (await redisClient.hExists("cached-details", id)) {
+      //     const data = redisClient.hGet("cached-details", id);
+      //     return JSON.parse(data);
+      //   }
       let response;
       try {
         response = await axios.get(`${POKEMON_API}${id}`);

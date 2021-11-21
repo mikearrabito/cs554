@@ -16,12 +16,12 @@ const initialState: {
   teams: {},
 };
 
-export default function (
+export default function trainersReducer(
   state = initialState,
   action: { type: string; payload: { trainer?: string; pokemonId?: number } }
 ) {
-  let trainer: string | undefined = action.payload.trainer;
-  let pokemonId: number | undefined = action.payload.pokemonId;
+  let trainer: string | undefined = action.payload?.trainer;
+  let pokemonId: number | undefined = action.payload?.pokemonId;
   let new_teams: { [trainer: string]: Set<number> };
   switch (action.type) {
     case ADD_TRAINER:
@@ -50,9 +50,7 @@ export default function (
       }
       delete new_teams[trainer];
       return {
-        trainersList: state.trainersList.filter(
-          (trainer) => trainer !== trainer
-        ),
+        trainersList: state.trainersList.filter((tr) => trainer !== tr),
         selected: new_selected,
         teams: new_teams,
       };

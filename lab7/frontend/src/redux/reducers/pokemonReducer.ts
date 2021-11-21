@@ -5,7 +5,7 @@ const initialState: { currentPage: PokemonInfo[] } = {
   currentPage: [],
 };
 
-export default function (
+export default function pokemonReducer(
   state = initialState,
   action: { type: string; payload: PokemonInfo[] }
 ) {
