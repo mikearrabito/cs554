@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# CS 554 Lab 7
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Pokemon API app
 
 ## Available Scripts
 
