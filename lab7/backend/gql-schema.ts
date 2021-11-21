@@ -10,13 +10,19 @@ const { gql } = require("apollo-server-core");
 
 module.exports = gql`
   type Query {
-    getPokemonList(page: Int): [PokemonInfo]!
+    getPokemonList(page: Int): PokemonPage!
     getPokemon(id: Int!): Pokemon
   }
 
   type Pokemon {
     info: PokemonInfo!
     attributes: PokemonAttributes!
+  }
+
+  type PokemonPage {
+    totalCount: Int!
+    perPage: Int!
+    pokemonList: [PokemonInfo]!
   }
 
   type PokemonInfo {

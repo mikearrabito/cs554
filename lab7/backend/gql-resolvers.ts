@@ -6,6 +6,7 @@ const redisClient = createClient();
   await redisClient.connect();
 })();
 
+const perPage = 20;
 const baseImageUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 
@@ -32,10 +33,10 @@ module.exports = {
       let response;
       try {
         response = await axios.get(POKEMON_API, {
-          params: { limit: 20, offset: page * 20 }, // 20 per page
+          params: { limit: perPage, offset: page * perPage },
         });
       } catch (e) {
-        return [];
+        return { totalCount: 0, perPage: 0, pokemonList: [] };
       }
       const pokemonList = [];
       for (const data of response.data.results) {
@@ -48,7 +49,7 @@ module.exports = {
         });
       }
       //await redisClient.hSet("cached-pages", page, JSON.stringify(pokemonList));
-      return pokemonList;
+      return { pokemonList, totalCount: response.data.count, perPage };
     },
     getPokemon: async (_: any, args: { id: number }) => {
       // return single pokemon with a given id, or null if not found

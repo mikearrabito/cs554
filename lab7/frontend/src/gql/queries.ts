@@ -3,9 +3,13 @@ import { gql } from "@apollo/client";
 export const getPageQuery = gql`
   query getPage($page: Int) {
     getPokemonList(page: $page) {
-      id
-      name
-      image
+      totalCount
+      perPage
+      pokemonList {
+        id
+        name
+        image
+      }
     }
   }
 `;
