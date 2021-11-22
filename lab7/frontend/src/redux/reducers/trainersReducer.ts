@@ -10,7 +10,7 @@ import {
 const initialState: {
   trainersList: string[];
   selected: string;
-  teams: { [trainer: string]: { id: PokemonInfo } }; // trainer mapped to set of ids of pokemon caught mapped to their info (name, image)
+  teams: { [trainer: string]: { id: PokemonInfo } };
 } = {
   trainersList: [],
   selected: "",
@@ -38,8 +38,11 @@ export default function trainersReducer(
       if (trainer === undefined) {
         return state;
       }
-      if (state.trainersList.includes(trainer)) {
-        return state;
+      for (const oldTrainer of state.trainersList) {
+        if (oldTrainer.toLowerCase() === trainer.toLowerCase()) {
+          // dont allow trainer "Blue" and "blue" to both exist
+          return state;
+        }
       }
       new_teams = { ...state.teams };
       new_teams[trainer] = {}; // initialize team object for the new trainer
@@ -55,14 +58,14 @@ export default function trainersReducer(
         teams: new_teams,
       };
     case REMOVE_TRAINER:
-      // remove training from trainersList, and remove selected pokemon from teams object
+      // remove training from trainersList, and remove selected trainer from teams object
       if (trainer === undefined) {
         return state;
       }
       new_teams = { ...state.teams }; // make copy
       let new_selected = state.selected;
       if (new_selected === trainer || Object.keys(new_teams).length === 0) {
-        new_selected = ""; // if we delete the currently selected trainer, or we have no trainers left, reset selected to ""
+        new_selected = ""; // if we delete the currently selected trainer (this behavior is disabled on the UI for now), or we have no trainers left, reset selected to ""
       }
       delete new_teams[trainer];
       return {
@@ -79,7 +82,6 @@ export default function trainersReducer(
         selected: trainer,
       };
     case ADD_TO_TEAM:
-      // add to set of ids for the team for the currently selected trainer
       if (pokemonInfo === undefined) {
         return state;
       }

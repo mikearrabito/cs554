@@ -1,13 +1,5 @@
 const { gql } = require("apollo-server-core");
 
-// TODO: add abilities to pokemon
-// add forms
-// add moves
-// past types
-// held_items
-// stats
-// types
-
 module.exports = gql`
   type Query {
     getPokemonList(page: Int): PokemonPage!
@@ -31,9 +23,22 @@ module.exports = gql`
     image: String!
   }
 
+  type PokemonStats {
+    hp: Int!
+    attack: Int!
+    defense: Int!
+    specialAttack: Int!
+    specialDefense: Int!
+    speed: Int!
+  }
+
   type PokemonAttributes {
     height: Int!
     weight: Int!
     base_experience: Int!
+    types: [String!]!
+    stats: PokemonStats!
+    abilities: [String!]!
+    moves: [String!]!
   }
 `;

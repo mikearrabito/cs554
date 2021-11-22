@@ -26,6 +26,17 @@ export const getPokemonQuery = gql`
         base_experience
         height
         weight
+        types
+        abilities
+        moves
+        stats {
+          hp
+          attack
+          defense
+          specialAttack
+          specialDefense
+          speed
+        }
       }
     }
   }

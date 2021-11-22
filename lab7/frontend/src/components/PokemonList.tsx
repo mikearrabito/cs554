@@ -12,12 +12,8 @@ import { getPageQuery } from "../gql/queries";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Pagination, Typography, LinearProgress } from "@mui/material";
-import notFound from "../images/notFound.png";
 import { Button, Grid } from "@mui/material";
-
-// TODO: also show catch/release on details page, check again if a trainer is selected
-// TODO: make pokemon clickable, send to details page for that id
-// TODO: show trainers teams on trainers page
+import PokemonListItem from "./PokemonListItem";
 
 const PokemonList = (props: object) => {
   const params = useParams();
@@ -36,7 +32,8 @@ const PokemonList = (props: object) => {
   const selectedTrainer = useSelector(currentTrainerSelector);
   const teams = useSelector(teamsSelector); // gives the team object for the currently selected trainer
 
-  const setPagepokemonInfos = createAction<PokemonInfo[]>(SET_PAGE);
+  const setCurrentPageList =
+    createAction<{ pokemonList: PokemonInfo[] }>(SET_PAGE);
   const addToTeam = createAction<{ pokemonInfo: PokemonInfo }>(ADD_TO_TEAM); // info contains id, name, imageUrl
   const removeFromTeam = createAction<{ pokemonId: number }>(REMOVE_FROM_TEAM); // remove pokemon with given id
 
@@ -56,7 +53,7 @@ const PokemonList = (props: object) => {
       if (pokemonList.length === 0) {
         navigate("/not-found");
       } else {
-        dispatch(setPagepokemonInfos(pokemonList));
+        dispatch(setCurrentPageList({ pokemonList }));
       }
     },
     onError: () => {
@@ -113,7 +110,7 @@ const PokemonList = (props: object) => {
               </Typography>
             </div>
           ) : (
-            <Typography>
+            <Typography style={{ fontWeight: 600 }}>
               Create a trainer on the trainers page to start catching Pokemon!
             </Typography>
           )}
@@ -122,22 +119,14 @@ const PokemonList = (props: object) => {
             spacing={4}
             justifyContent="center"
             alignItems="center"
+            style={{ marginBottom: 30 }}
           >
             {pokemonList.map((pokemonInfo: PokemonInfo) => {
               return (
                 <Grid item key={pokemonInfo.id}>
-                  <img
-                    alt={pokemonInfo.name}
-                    src={pokemonInfo.image}
-                    width={200}
-                    height={200}
-                    onError={(e) =>
-                      ((e.target as HTMLImageElement).src = notFound)
-                    }
-                  />
-                  <Typography>{pokemonInfo.name}</Typography>
+                  <PokemonListItem pokemonInfo={pokemonInfo} link />
                   {selectedTrainer !== "" && (
-                    <>
+                    <div style={{ marginTop: 10, marginBottom: 10 }}>
                       <Button
                         variant="outlined"
                         onClick={
@@ -169,7 +158,7 @@ const PokemonList = (props: object) => {
                           <Typography>Party Full</Typography>
                         )}
                       </Button>
-                    </>
+                    </div>
                   )}
                 </Grid>
               );

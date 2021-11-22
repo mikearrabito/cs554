@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
-    <nav>
+    <nav style={{ margin: 10 }}>
       <Link to="/" style={{ marginRight: "20px" }}>
         Home
       </Link>

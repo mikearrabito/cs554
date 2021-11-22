@@ -9,7 +9,7 @@ import {
 import { TextField, Typography, Button, Grid } from "@mui/material";
 import { useState } from "react";
 import { PokemonInfo } from "../types/Pokemon";
-import notFound from "../images/notFound.png";
+import PokemonListItem from "./PokemonListItem";
 
 const Trainers = () => {
   const dispatch = useDispatch();
@@ -113,16 +113,7 @@ const Trainers = () => {
                     (pokemonInfo: PokemonInfo) => {
                       return (
                         <Grid item key={pokemonInfo.id}>
-                          <img
-                            src={pokemonInfo.image}
-                            alt={pokemonInfo.name}
-                            width={200}
-                            height={200}
-                            onError={(e) =>
-                              ((e.target as HTMLImageElement).src = notFound)
-                            }
-                          />
-                          <Typography>{pokemonInfo.name}</Typography>
+                          <PokemonListItem pokemonInfo={pokemonInfo} link />
                         </Grid>
                       );
                     }
