@@ -36,12 +36,26 @@ const Trainers = () => {
     <div>
       <div style={{ margin: 14 }}>
         <form onSubmit={formSubmit}>
-          <TextField
-            label="Add a Trainer"
-            variant="outlined"
-            value={newTrainerName}
-            onChange={(e) => setNewTrainerName(e.target.value)}
-          />
+          <label htmlFor="trainerInput">Add a new Trainer</label>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <TextField
+              id="trainerInput"
+              placeholder="Trainer Name"
+              variant="outlined"
+              value={newTrainerName}
+              onChange={(e) => setNewTrainerName(e.target.value)}
+              style={{ marginRight: 10 }}
+            />
+            <Button type="submit" variant="outlined" size="large">
+              Submit
+            </Button>
+          </div>
         </form>
       </div>
       <Typography variant="h1" style={{ fontSize: "3rem", marginBottom: 10 }}>

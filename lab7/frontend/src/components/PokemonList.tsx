@@ -148,15 +148,13 @@ const PokemonList = (props: object) => {
                         {Object.keys(teams[selectedTrainer]).length < 6 &&
                         !Object.keys(teams[selectedTrainer]).includes(
                           pokemonInfo.id.toString()
-                        ) ? (
-                          <Typography>Catch</Typography>
-                        ) : Object.keys(teams[selectedTrainer]).includes(
-                            pokemonInfo.id.toString()
-                          ) ? (
-                          <Typography>Release</Typography>
-                        ) : (
-                          <Typography>Party Full</Typography>
-                        )}
+                        )
+                          ? "Catch"
+                          : Object.keys(teams[selectedTrainer]).includes(
+                              pokemonInfo.id.toString()
+                            )
+                          ? "Release"
+                          : "Party Full"}
                       </Button>
                     </div>
                   )}

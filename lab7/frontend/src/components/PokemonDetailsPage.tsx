@@ -118,15 +118,13 @@ const PokemonDetailsPage = () => {
                 {Object.keys(teams[selectedTrainer]).length < 6 &&
                 !Object.keys(teams[selectedTrainer]).includes(
                   pokemonDetails.info.id.toString()
-                ) ? (
-                  <Typography>Catch</Typography>
-                ) : Object.keys(teams[selectedTrainer]).includes(
-                    pokemonDetails.info.id.toString()
-                  ) ? (
-                  <Typography>Release</Typography>
-                ) : (
-                  <Typography>Party Full</Typography>
-                )}
+                )
+                  ? "Catch"
+                  : Object.keys(teams[selectedTrainer]).includes(
+                      pokemonDetails.info.id.toString()
+                    )
+                  ? "Release"
+                  : "Party Full"}
               </Button>
             ) : (
               <Typography style={{ fontWeight: 600 }}>
