@@ -3,9 +3,6 @@ const axios = require("axios");
 
 const redisClient = createClient();
 (async () => {
-  redisClient.on("error", (err: string) =>
-    console.log("Redis Client Error", err)
-  );
   await redisClient.connect();
 })();
 
@@ -14,7 +11,7 @@ const baseImageUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
 const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
 
-const kebabToCamelCase = (kebabCaseString: string) => {
+const kebabToCamelCase = (kebabCaseString: string): string => {
   return kebabCaseString.replace(/-./g, (x) => x[1].toUpperCase());
 };
 
