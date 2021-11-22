@@ -9,8 +9,8 @@ const redisClient = createClient();
 const perPage = 20;
 const baseImageUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
-
 const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
+
 //TODO: renable redis
 module.exports = {
   Query: {

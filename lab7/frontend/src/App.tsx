@@ -7,12 +7,14 @@ import PokemonList from "./components/PokemonList";
 import MainPage from "./components/MainPage";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import Nav from "./components/Nav";
 
 function App() {
   return (
     <Provider store={store}>
       <div className="App">
         <Router>
+          <Nav />
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/pokemon/page/:page" element={<PokemonList />} />
