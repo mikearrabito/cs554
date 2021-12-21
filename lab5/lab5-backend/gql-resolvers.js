@@ -9,14 +9,14 @@ let redisClient;
 })();
 
 const { UNSPLASH_ACCESS_KEY } = process.env;
-const unsplashApi = "https://api.unsplash.com/photos";
+const UNSPLASH_API = "https://api.unsplash.com/photos";
 
 module.exports = {
   Query: {
     unsplashImages: async (parent, args, context, info) => {
       const { pageNum } = args;
 
-      const response = await axios.get(unsplashApi, {
+      const response = await axios.get(UNSPLASH_API, {
         params: { page: pageNum, client_id: UNSPLASH_ACCESS_KEY },
       });
       const data = response.data;
