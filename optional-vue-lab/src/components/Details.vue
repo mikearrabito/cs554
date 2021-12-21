@@ -13,9 +13,7 @@
               name: 'details',
               params: {
                 section: 'characters',
-                id: character.resourceURI.split('/')[
-                  character.resourceURI.split('/').length - 1
-                ],
+                id: character.resourceURI.split('/').at(-1),
               },
             }"
             >{{ character.name }}</router-link
@@ -32,9 +30,7 @@
               name: 'details',
               params: {
                 section: 'comics',
-                id: comic.resourceURI.split('/')[
-                  comic.resourceURI.split('/').length - 1
-                ],
+                id: comic.resourceURI.split('/').at(-1),
               },
             }"
             >{{ comic.name }}</router-link
@@ -51,9 +47,7 @@
               name: 'details',
               params: {
                 section: 'series',
-                id: ser.resourceURI.split('/')[
-                  ser.resourceURI.split('/').length - 1
-                ],
+                id: ser.resourceURI.split('/').at(-1),
               },
             }"
             >{{ ser.name }}</router-link
@@ -166,11 +160,13 @@ export default defineComponent({
       this.loading = false;
       this.name = data.name ?? data.title;
       this.image = `${data.thumbnail.path}.${data.thumbnail.extension}`;
+
       if (data.description !== null) {
         this.description = data.description.replace(/<\/?[^>]+(>|$)/g, "");
       } else {
         this.description = null;
       }
+
       this.price = null;
       if (data.prices?.length) {
         for (const price of data.prices) {
@@ -180,31 +176,14 @@ export default defineComponent({
           }
         }
       }
-      if (data.creators?.items?.length) {
-        this.creators = data.creators.items;
-      } else {
-        this.creators = undefined;
-      }
-      if (data.stories?.items?.length) {
-        this.stories = data.stories.items.filter((story) => story.name !== "");
-      } else {
-        this.stories = null;
-      }
-      if (data.series?.items?.length) {
-        this.series = data.series.items;
-      } else {
-        this.series = undefined;
-      }
-      if (data.comics?.items?.length) {
-        this.comics = data.comics.items;
-      } else {
-        this.comics = undefined;
-      }
-      if (data.characters?.items?.length) {
-        this.characters = data.characters.items;
-      } else {
-        this.characters = undefined;
-      }
+
+      this.creators = data.creators?.items ?? undefined;
+      this.stories = data.stories?.items?.length
+        ? data.stories.items.filter((story) => story.name !== "")
+        : null;
+      this.series = data.series?.items ?? undefined;
+      this.comics = data.comics?.items ?? undefined;
+      this.characters = data.characters?.items ?? undefined;
     },
   },
   created() {
