@@ -11,8 +11,13 @@ import { useLazyQuery } from "@apollo/client";
 import { getPageQuery } from "../gql/queries";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Pagination, Typography, LinearProgress } from "@mui/material";
-import { Button, Grid } from "@mui/material";
+import {
+  Pagination,
+  Typography,
+  LinearProgress,
+  Button,
+  Grid,
+} from "@mui/material";
 import PokemonListItem from "./PokemonListItem";
 
 const PokemonList = (props: object) => {

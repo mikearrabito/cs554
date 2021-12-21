@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
 import { PokemonInfo } from "../types/Pokemon";
-import notFound from "../images/notFound.png";
 import { useState } from "react";
+import notFound from "../images/notFound.png";
 
 const PokemonListItem = (props: {
   pokemonInfo: PokemonInfo;
