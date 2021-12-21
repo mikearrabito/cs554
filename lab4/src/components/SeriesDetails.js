@@ -21,11 +21,7 @@ const SeriesDetails = (props) => {
               return (
                 <ListItem key={char.resourceURI}>
                   <Link
-                    to={`/characters/${
-                      char.resourceURI.split("/")[
-                        char.resourceURI.split("/").length - 1
-                      ]
-                    }`}
+                    to={`/characters/${char.resourceURI.split("/").at(-1)}`}
                     style={{ textDecoration: "none", color: "blue" }}
                   >
                     <Typography>{char.name}</Typography>
@@ -46,11 +42,7 @@ const SeriesDetails = (props) => {
               return (
                 <ListItem key={comic.resourceURI}>
                   <Link
-                    to={`/comics/${
-                      comic.resourceURI.split("/")[
-                        comic.resourceURI.split("/").length - 1
-                      ]
-                    }`}
+                    to={`/comics/${comic.resourceURI.split("/").at(-1)}`}
                     style={{ textDecoration: "none", color: "blue" }}
                   >
                     <Typography>{comic.name}</Typography>

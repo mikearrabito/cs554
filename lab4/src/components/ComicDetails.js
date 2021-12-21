@@ -7,8 +7,7 @@ const ComicDetails = (props) => {
   let printPrice = 0;
 
   if (seriesUri !== undefined) {
-    seriesUri = seriesUri.split("/");
-    seriesUri = seriesUri[seriesUri.length - 1];
+    seriesUri = seriesUri.split("/").at(-1);
   }
 
   if (info.prices?.length) {
@@ -61,11 +60,7 @@ const ComicDetails = (props) => {
               return (
                 <ListItem key={char.resourceURI}>
                   <Link
-                    to={`/characters/${
-                      char.resourceURI.split("/")[
-                        char.resourceURI.split("/").length - 1
-                      ]
-                    }`}
+                    to={`/characters/${char.resourceURI.split("/").at(-1)}`}
                     style={{ textDecoration: "none", color: "blue" }}
                   >
                     <Typography>{char.name}</Typography>
@@ -89,11 +84,7 @@ const ComicDetails = (props) => {
               return (
                 <ListItem key={item.resourceURI}>
                   <Link
-                    to={`/comics/${
-                      item.resourceURI.split("/")[
-                        item.resourceURI.split("/").length - 1
-                      ]
-                    }`}
+                    to={`/comics/${item.resourceURI.split("/").at(-1)}`}
                     style={{ textDecoration: "none", color: "blue" }}
                   >
                     {item.name}
