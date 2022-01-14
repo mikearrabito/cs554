@@ -6,17 +6,23 @@ const redisClient = createClient();
   await redisClient.connect();
 })();
 
-const perPage = 20;
-const baseImageUrl =
-  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/";
+const DEFAULT_PER_PAGE = 20;
+const BASE_IMAGE_URL =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork";
 const POKEMON_API = "https://pokeapi.co/api/v2/pokemon/";
 
 const kebabToCamelCase = (kebabCaseString: string): string => {
-  return kebabCaseString.replace(/-./g, (x) => x[1].toUpperCase());
+  const camelCaseString = kebabCaseString.replace(/-./g, (x) =>
+    x[1].toUpperCase()
+  );
+  return camelCaseString;
 };
 
 const capitalize = (str: string): string => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  if (str.length === 0) {
+    return "";
+  }
+  return str[0].toUpperCase() + str.slice(1);
 };
 
 module.exports = {
@@ -40,25 +46,24 @@ module.exports = {
       let response;
       try {
         response = await axios.get(POKEMON_API, {
-          params: { limit: perPage, offset: page * perPage },
+          params: { limit: DEFAULT_PER_PAGE, offset: page * DEFAULT_PER_PAGE },
         });
       } catch (e) {
         return { totalCount: 0, perPage: 0, pokemonList: [] };
       }
       const pokemonList = [];
       for (const data of response.data.results) {
-        let split = data.url.split("/");
-        const id = split[split.length - 2];
+        const id = data.url.split("/").at(-2);
         pokemonList.push({
           id,
           name: capitalize(data.name),
-          image: `${baseImageUrl}${id}.png`,
+          image: `${BASE_IMAGE_URL}/${id}.png`,
         });
       }
       const returnData = {
         pokemonList,
         totalCount: response.data.count,
-        perPage,
+        perPage: DEFAULT_PER_PAGE,
       };
       await redisClient.hSet(
         "cachedPages",
@@ -104,7 +109,7 @@ module.exports = {
         info: {
           id: data.id,
           name: capitalize(data.name),
-          image: `${baseImageUrl}${id}.png`,
+          image: `${BASE_IMAGE_URL}${id}.png`,
         },
         attributes: {
           height: data.height,

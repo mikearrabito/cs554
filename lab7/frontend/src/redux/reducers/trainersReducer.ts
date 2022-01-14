@@ -17,7 +17,7 @@ const initialState: {
   teams: {},
 };
 
-export default function trainersReducer(
+const trainersReducer = (
   state = initialState,
   action: {
     type: string;
@@ -27,7 +27,7 @@ export default function trainersReducer(
       pokemonId?: number;
     };
   }
-) {
+) => {
   let trainer: string | undefined = action.payload?.trainer;
   let pokemonInfo: PokemonInfo | undefined = action.payload?.pokemonInfo;
   let pokemonId: number | undefined = action.payload?.pokemonId;
@@ -104,4 +104,6 @@ export default function trainersReducer(
     default:
       return state;
   }
-}
+};
+
+export default trainersReducer;

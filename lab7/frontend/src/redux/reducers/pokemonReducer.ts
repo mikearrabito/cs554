@@ -6,13 +6,13 @@ const initialState: { currentPage: PokemonInfo[]; details: {} } = {
   details: {},
 };
 
-export default function pokemonReducer(
+const pokemonReducer = (
   state = initialState,
   action: {
     type: string;
     payload: { pokemonList?: PokemonInfo[]; details: PokemonDetails };
   }
-) {
+) => {
   let pokemonList: PokemonInfo[] | undefined = action.payload?.pokemonList;
   let details: PokemonDetails | undefined = action.payload?.details;
   switch (action.type) {
@@ -35,4 +35,6 @@ export default function pokemonReducer(
     default:
       return state;
   }
-}
+};
+
+export default pokemonReducer;
