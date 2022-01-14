@@ -2,9 +2,8 @@ const { createClient } = require("redis");
 const axios = require("axios");
 const { v4: uuid } = require("uuid");
 
-let redisClient;
+const redisClient = createClient();
 (async () => {
-  redisClient = createClient();
   await redisClient.connect();
 })();
 
@@ -13,7 +12,7 @@ const UNSPLASH_API = "https://api.unsplash.com/photos";
 
 module.exports = {
   Query: {
-    unsplashImages: async (parent, args, context, info) => {
+    unsplashImages: async (_, args) => {
       const { pageNum } = args;
 
       const response = await axios.get(UNSPLASH_API, {
@@ -77,7 +76,7 @@ module.exports = {
     },
   },
   Mutation: {
-    uploadImage: async (parent, args, context, info) => {
+    uploadImage: async (_, args) => {
       const { url, description, posterName } = args;
       const id = uuid();
       const image = {
@@ -92,7 +91,7 @@ module.exports = {
       await redisClient.hSet("images", id, JSON.stringify(image));
       return image;
     },
-    updateImage: async (parent, args, context, info) => {
+    updateImage: async (_, args) => {
       let { id, url, posterName, description, userPosted, binned, numBinned } =
         args;
       let oldImage;
@@ -141,13 +140,11 @@ module.exports = {
       }
       return image;
     },
-    deleteImage: async (parent, args, context, info) => {
+    deleteImage: async (_, args) => {
       const { id } = args;
       let image = await redisClient.hGet("images", id);
       image = JSON.parse(image);
       await redisClient.hDel("images", id);
-
-      // if image was binned, remove from top-binned
       await redisClient.zRem("top-binned", id);
       return image;
     },

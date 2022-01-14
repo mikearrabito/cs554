@@ -9,7 +9,7 @@ import PopularImages from "./components/PopularImages";
 
 export const ImagesContext = createContext();
 
-function App() {
+const App = () => {
   const [images, setImages] = useState([]);
 
   return (
@@ -28,6 +28,6 @@ function App() {
       </div>
     </ImagesContext.Provider>
   );
-}
+};
 
 export default App;
