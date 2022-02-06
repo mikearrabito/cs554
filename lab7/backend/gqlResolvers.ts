@@ -109,7 +109,7 @@ module.exports = {
         info: {
           id: data.id,
           name: capitalize(data.name),
-          image: `${BASE_IMAGE_URL}${id}.png`,
+          image: `${BASE_IMAGE_URL}/${id}.png`,
         },
         attributes: {
           height: data.height,
